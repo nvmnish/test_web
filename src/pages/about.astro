@@ -1,0 +1,13 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { AboutPage } from '../components/AboutPage';
+import { Footer } from '../components/Footer';
+---
+
+<BaseLayout
+  title="About Sheri Otto & GLS. — Marketing Advisory"
+  description="Learn about Sheri Otto and the three GLS principles behind messaging that sounds like you."
+>
+  <AboutPage client:load />
+  <Footer client:load />
+</BaseLayout>

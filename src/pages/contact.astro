@@ -1,0 +1,14 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { ContactPage } from '../components/ContactPage';
+import { Footer } from '../components/Footer';
+---
+
+<BaseLayout
+  title="Work With Me — Contact GLS Advisory & Sheri Otto"
+  description="Start a direct conversation with Sheri Otto on executive thought leadership, narrative matrix strategy, or the Executive Content Engine."
+  bodyClass="bg-[#FFF9F3]/60 text-[#1E2E2A] font-sans antialiased selection:bg-[#B8C87A]/40 selection:text-[#162A26] min-h-screen"
+>
+  <ContactPage client:load />
+  <Footer client:load bgColor="bg-[#FFF9F3]/60" />
+</BaseLayout>

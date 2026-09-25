@@ -1,0 +1,13 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { BlogPage } from '../components/BlogPage';
+import { Footer } from '../components/Footer';
+---
+
+<BaseLayout
+  title="The GLS Journal — Marketing for Busy Leaders"
+  description="Tactical essays, message teardowns, and framework breakdowns for leaders who want their expertise to match their market visibility."
+>
+  <BlogPage client:load />
+  <Footer client:load />
+</BaseLayout>

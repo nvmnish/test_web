@@ -1,0 +1,13 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { CaseStudiesPage } from '../components/CaseStudiesPage';
+import { Footer } from '../components/Footer';
+---
+
+<BaseLayout
+  title="Case Studies & Proof — GLS. Executive Marketing Advisory"
+  description="Explore real case studies showing how founders and in-house teams turned executive expertise into pipeline and enrollment."
+>
+  <CaseStudiesPage client:load />
+  <Footer client:load />
+</BaseLayout>

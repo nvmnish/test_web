@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { BookingPage } from '../components/BookingPage';
+import { Footer } from '../components/Footer';
+---
+
+<BaseLayout
+  title="Checkout — GLS."
+  description="Select your tier, enter your bottleneck, and lock in your on-boarding discovery slot with Sheri Otto."
+  bodyClass="bg-white text-[#1E2E2A] font-sans antialiased selection:bg-[#B8C87A]/40 selection:text-[#162A26] min-h-screen"
+>
+  <!-- Interactive Form Island: Receives contact info, bottleneck details, tier selection, and appointment slot -->
+  <BookingPage client:load />
+  <Footer client:load bgWhite={true} />
+</BaseLayout>

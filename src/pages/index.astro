@@ -1,0 +1,48 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { Navbar } from '../components/Navbar';
+import { Hero } from '../components/Hero';
+import { WhoWeServe } from '../components/WhoWeServe';
+import { ClientStories } from '../components/ClientStories';
+import { VideoCarousel } from '../components/VideoCarousel';
+import { Pricing } from '../components/Pricing';
+import { ComparisonTable } from '../components/ComparisonTable';
+import { FAQSection } from '../components/FAQSection';
+import { ClosingCta } from '../components/ClosingCta';
+import { Footer } from '../components/Footer';
+---
+
+<BaseLayout
+  title="GLS. — Marketing for People Too Busy Doing the Work"
+  description="Content and messaging advisory for founders, operators, and in-house teams by Sheri Otto."
+>
+  <!-- Hero Section with overlapping transparent Navbar & Casino Counter Island -->
+  <Hero client:load />
+
+  <!-- Main Content Sections -->
+  <main>
+    <!-- Who We Serve: Interactive Island linking to Proof page -->
+    <WhoWeServe client:load />
+
+    <!-- Client Stories: Interactive Island triggering Book a call modal -->
+    <ClientStories client:load />
+
+    <!-- Video Carousel: Interactive Island for video preview playback -->
+    <VideoCarousel client:visible />
+
+    <!-- Pricing: Interactive Tier selection linking to booking -->
+    <Pricing client:visible />
+
+    <!-- Who we aren't: Static comparison table -->
+    <ComparisonTable />
+
+    <!-- FAQ: Interactive Accordion Island -->
+    <FAQSection client:visible />
+
+    <!-- Closing section with CTA & Modal Trigger -->
+    <ClosingCta client:visible />
+  </main>
+
+  <!-- Static Footer -->
+  <Footer client:load />
+</BaseLayout>
