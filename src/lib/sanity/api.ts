@@ -65,7 +65,20 @@ export async function getHomePageData() {
       heroImage: sanityHome?.heroImage || null,
       heroBackgroundImage: sanityHome?.heroBackgroundImage || null,
     },
-    sections: sanityHome?.sections || null,
+    sections: (() => {
+      const rawSections = sanityHome?.sections || null;
+      if (Array.isArray(rawSections)) {
+        const compIdx = rawSections.findIndex((s: any) => s._type === 'comparisonSection');
+        const priceIdx = rawSections.findIndex((s: any) => s._type === 'pricingSection');
+        if (compIdx !== -1 && priceIdx !== -1 && priceIdx < compIdx) {
+          const ordered = [...rawSections];
+          const [compItem] = ordered.splice(compIdx, 1);
+          ordered.splice(priceIdx, 0, compItem);
+          return ordered;
+        }
+      }
+      return rawSections;
+    })(),
     faqs,
     pricingTiers,
     clientStories,

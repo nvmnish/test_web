@@ -32,9 +32,22 @@ export const SectionRenderer: React.FC<SectionRendererProps> = ({
     return null;
   }
 
+  // Ensure 'Who we aren't' (comparisonSection) is placed before 'Pricing' (pricingSection)
+  const orderedSections = (() => {
+    const compIdx = sections.findIndex((s: any) => s._type === 'comparisonSection');
+    const priceIdx = sections.findIndex((s: any) => s._type === 'pricingSection');
+    if (compIdx !== -1 && priceIdx !== -1 && priceIdx < compIdx) {
+      const copy = [...sections];
+      const [compItem] = copy.splice(compIdx, 1);
+      copy.splice(priceIdx, 0, compItem);
+      return copy;
+    }
+    return sections;
+  })();
+
   return (
     <div className="dynamic-sections-container">
-      {sections.map((section, idx) => {
+      {orderedSections.map((section, idx) => {
         const key = section._key || `section-${section._type}-${idx}`;
 
         switch (section._type) {

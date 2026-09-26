@@ -229,10 +229,10 @@ export default function App() {
                 {/* Don't take our word for it: Short form video placeholder carousel */}
                 <VideoCarousel />
 
-                {/* Who we aren't: Data visualization / comparison us vs them table */}
+                {/* Who we aren't: Data visualization / comparison us vs them table (Position 5) */}
                 <ComparisonTable />
 
-                {/* Pricing: Two tiers, clean, ample white space */}
+                {/* Pricing: Two tiers, clean, ample white space (Position 6) */}
                 <Pricing onSelectTier={handleSelectPricingTier} />
 
                 {/* FAQ: Populated expandable accordion questions */}
