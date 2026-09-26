@@ -18,16 +18,16 @@ export const Pricing: React.FC<PricingProps> = ({ onSelectTier, tiers, title }) 
     }
   };
   return (
-    <section className="py-24 sm:py-32 bg-[#FFF9F3] scroll-mt-10" id="pricing">
+    <section className="py-14 sm:py-20 bg-[#FFF9F3] scroll-mt-10" id="pricing">
       <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-12">
         {/* Section Heading */}
-        <div className="text-center max-w-2xl mx-auto mb-16 sm:mb-24">
+        <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-16">
           <h2 className="text-5xl sm:text-6xl lg:text-[4.25rem] font-serif italic text-[#281B0C] tracking-tight">
             {title || 'Pricing'}
           </h2>
         </div>
 
-        {/* Two Clean Tiers - both sharing warm background #FFF9F3 (dark green removed from second tier) */}
+        {/* Two Clean Tiers - both sharing warm background #FFF9F3 */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-14 max-w-5xl mx-auto items-stretch">
           {activeTiers.map((tier, index) => {
             const isSecondTier = index === 1;
@@ -35,7 +35,7 @@ export const Pricing: React.FC<PricingProps> = ({ onSelectTier, tiers, title }) 
             return (
               <div
                 key={tier.id}
-                className={`relative rounded-[1.75rem] p-10 sm:p-12 lg:p-14 flex flex-col justify-between transition-all duration-300 hover:scale-[1.01] bg-[#FFF9F3] text-[#281B0C] ${
+                className={`relative rounded-lg p-10 sm:p-12 lg:p-14 flex flex-col justify-between transition-all duration-300 hover:scale-[1.01] bg-[#FFF9F3] text-[#281B0C] ${
                   isSecondTier
                     ? 'border-2 border-[#BDC67A]'
                     : 'border border-[#281B0C]/15'
@@ -126,7 +126,7 @@ export const Pricing: React.FC<PricingProps> = ({ onSelectTier, tiers, title }) 
                 <div className="pt-12 mt-auto">
                   <button
                     onClick={() => handleTierSelect(tier.id)}
-                    className={`w-full py-4 px-6 rounded-md font-sans font-medium text-sm sm:text-base text-center transition-all duration-200 shadow-sm cursor-pointer active:scale-[0.99] ${
+                    className={`w-full py-4 px-6 rounded-full font-sans font-medium text-sm sm:text-base text-center transition-all duration-200 shadow-sm cursor-pointer active:scale-[0.99] ${
                       isSecondTier
                         ? 'bg-[#BDC67A] hover:bg-[#AEC068] text-[#162A24] font-semibold'
                         : 'bg-[#281B0C] hover:bg-[#1A1208] text-white'

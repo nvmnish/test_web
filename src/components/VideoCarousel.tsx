@@ -71,12 +71,12 @@ export const VideoCarousel: React.FC = () => {
 
   return (
     <section
-      className="py-20 sm:py-28 bg-[#FFF9F3] overflow-hidden"
+      className="py-14 sm:py-20 bg-[#FFF9F3] overflow-hidden"
       id="video-testimonials"
       aria-label="Video testimonials"
     >
       <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-12">
-        <div className="text-center max-w-2xl mx-auto mb-16 sm:mb-24">
+        <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-16">
           <h2 className="text-5xl sm:text-6xl lg:text-[4.25rem] font-serif italic text-[#281B0C] tracking-tight">
             Don&apos;t take our word for it.
           </h2>

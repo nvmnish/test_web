@@ -7,6 +7,7 @@ export const homePage = defineType({
   groups: [
     { name: 'content', title: 'Content & Layout', default: true },
     { name: 'hero', title: 'Hero Banner' },
+    { name: 'popup', title: 'Floating Tool Popup' },
     { name: 'seo', title: 'SEO & Metadata' },
   ],
   fields: [
@@ -66,6 +67,36 @@ export const homePage = defineType({
       group: 'hero',
     }),
 
+    // Floating Tool Popup on Homepage
+    defineField({
+      name: 'popupEnabled',
+      title: 'Enable Bottom-Right Tool Popup',
+      type: 'boolean',
+      initialValue: true,
+      group: 'popup',
+    }),
+    defineField({
+      name: 'popupBadge',
+      title: 'Popup Eyebrow Badge',
+      type: 'string',
+      initialValue: 'free tool',
+      group: 'popup',
+    }),
+    defineField({
+      name: 'popupHeadline',
+      title: 'Popup Headline',
+      type: 'string',
+      initialValue: 'Are your B2B Emails Hit or Miss? Transform them in 3 seconds for free!',
+      group: 'popup',
+    }),
+    defineField({
+      name: 'popupButtonText',
+      title: 'Popup Button Label',
+      type: 'string',
+      initialValue: 'fix my email',
+      group: 'popup',
+    }),
+
     // Flexible Elementor-like Page Builder Section List
     defineField({
       name: 'sections',
@@ -84,8 +115,10 @@ export const homePage = defineType({
         { type: 'closingCtaSection' },
         { type: 'richTextSection' },
         { type: 'mediaCalloutSection' },
+        { type: 'popupToolSection' },
       ],
     }),
+
 
     // SEO
     defineField({

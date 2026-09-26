@@ -14,10 +14,10 @@ export const WhoWeServe: React.FC<WhoWeServeProps> = ({ onRedirectToCaseStudies 
     }
   };
   return (
-    <section className="py-24 sm:py-32 bg-[#FFF9F3]" id="who-we-serve">
+    <section className="py-14 sm:py-20 bg-[#FFF9F3]" id="who-we-serve">
       <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-12">
         {/* Section Heading - Matched to Pricing: text-5xl sm:text-6xl lg:text-[4.25rem] text-[#281B0C] */}
-        <div className="text-center max-w-2xl mx-auto mb-16 sm:mb-24">
+        <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-16">
           <h2 className="text-5xl sm:text-6xl lg:text-[4.25rem] font-serif italic text-[#281B0C] tracking-tight">
             Who We Serve
           </h2>
@@ -31,7 +31,7 @@ export const WhoWeServe: React.FC<WhoWeServeProps> = ({ onRedirectToCaseStudies 
             <span className="uppercase tracking-widest text-[#8F7D6B] font-sans font-medium text-xs sm:text-sm mb-3 px-1">
               MARKETING TEAMS
             </span>
-            <div className="bg-[#DC943B]/85 text-white p-8 sm:p-10 lg:p-12 rounded-[2rem] shadow-sm flex flex-col justify-between flex-1 min-h-[380px] transition-transform hover:-translate-y-1 duration-300">
+            <div className="bg-[#DC943B]/85 text-white p-8 sm:p-10 lg:p-12 rounded-lg shadow-sm flex flex-col justify-between flex-1 min-h-[380px] transition-transform hover:-translate-y-1 duration-300">
               <div>
                 <h3 className="text-2xl sm:text-3xl font-bold font-sans tracking-tight mb-5 leading-snug">
                   Your team is shipping everything. <br />
@@ -64,7 +64,7 @@ export const WhoWeServe: React.FC<WhoWeServeProps> = ({ onRedirectToCaseStudies 
             <span className="uppercase tracking-widest text-[#8F7D6B] font-sans font-medium text-xs sm:text-sm mb-3 px-1">
               FOUNDERS AND OWNERS
             </span>
-            <div className="bg-[#DC943B]/85 text-white p-8 sm:p-10 lg:p-12 rounded-[2rem] shadow-sm flex flex-col justify-between flex-1 min-h-[380px] transition-transform hover:-translate-y-1 duration-300">
+            <div className="bg-[#DC943B]/85 text-white p-8 sm:p-10 lg:p-12 rounded-lg shadow-sm flex flex-col justify-between flex-1 min-h-[380px] transition-transform hover:-translate-y-1 duration-300">
               <div>
                 <h3 className="text-2xl sm:text-3xl font-bold font-sans tracking-tight mb-5 leading-snug">
                   You are the one everybody asks. <br />

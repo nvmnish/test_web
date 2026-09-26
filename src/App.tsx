@@ -26,6 +26,7 @@ import { NewsletterPage } from './components/NewsletterPage';
 import { BookingPage } from './components/BookingPage';
 import { ContactPage } from './components/ContactPage';
 import { SectionRenderer } from './components/SectionRenderer';
+import { EmailToolPopup } from './components/EmailToolPopup';
 import {
   getHomePageData,
   getAboutPageData,
@@ -228,11 +229,11 @@ export default function App() {
                 {/* Don't take our word for it: Short form video placeholder carousel */}
                 <VideoCarousel />
 
-                {/* Pricing: Two tiers, clean, ample white space */}
-                <Pricing onSelectTier={handleSelectPricingTier} />
-
                 {/* Who we aren't: Data visualization / comparison us vs them table */}
                 <ComparisonTable />
+
+                {/* Pricing: Two tiers, clean, ample white space */}
+                <Pricing onSelectTier={handleSelectPricingTier} />
 
                 {/* FAQ: Populated expandable accordion questions */}
                 <FAQSection onOpenBooking={() => handleOpenBooking()} />
@@ -251,6 +252,9 @@ export default function App() {
             onOpenBooking={() => handleOpenBooking()}
             onNavigate={handleNavigate}
           />
+
+          {/* Try out this free tool popup on bottom right of homepage */}
+          <EmailToolPopup onNavigateToTools={() => handleNavigate('free-tools')} />
         </>
       )}
 

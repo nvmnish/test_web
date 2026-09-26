@@ -7,10 +7,19 @@ interface FooterProps {
   onNavigate?: (page: PageView) => void;
   bgWhite?: boolean;
   bgColor?: string;
+  data?: any;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onOpenBooking, onNavigate, bgWhite = false, bgColor }) => {
+export const Footer: React.FC<FooterProps> = ({ onOpenBooking, onNavigate, bgWhite = false, bgColor, data }) => {
+  const brandName = data?.brandName || 'GLS';
+  const tagline = data?.tagline || 'Marketing and messaging advisory for leaders too busy doing the work to talk about it.';
+  const copyright = data?.copyright || `© ${new Date().getFullYear()} GLS Advisory LLC. All rights reserved.`;
+  const linkedinUrl = data?.linkedinUrl || 'https://www.linkedin.com';
+  const instagramUrl = data?.instagramUrl || 'https://www.instagram.com';
+  const emailAddress = data?.emailAddress || 'sheri@glsadvisory.com';
+
   const routeMap: Record<PageView, string> = {
+
     'home': '/',
     'case-studies': '/case-studies',
     'pricing': '/#pricing',
@@ -60,12 +69,12 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking, onNavigate, bgWhi
               id="footer-logo"
             >
               <span className="text-2xl font-extrabold tracking-tight text-[#1F3B36]">
-                GLS
+                {brandName}
               </span>
               <span className="inline-block w-2 h-2 rounded-full bg-[#E5B54F] ml-0.5"></span>
             </button>
             <p className="text-xs sm:text-sm text-stone-500 max-w-sm">
-              Marketing and messaging advisory for leaders too busy doing the work to talk about it.
+              {tagline}
             </p>
           </div>
 
@@ -120,11 +129,11 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking, onNavigate, bgWhi
 
         {/* Bottom copyright & Socials */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-stone-500 gap-4">
-          <p>© {new Date().getFullYear()} GLS Advisory LLC. All rights reserved.</p>
+          <p>{copyright}</p>
           
           <div className="flex items-center gap-4">
             <a
-              href="https://www.linkedin.com"
+              href={linkedinUrl}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="LinkedIn"
@@ -133,7 +142,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking, onNavigate, bgWhi
               <Linkedin className="w-4 h-4" />
             </a>
             <a
-              href="https://www.instagram.com"
+              href={instagramUrl}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Instagram"
@@ -142,7 +151,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking, onNavigate, bgWhi
               <Instagram className="w-4 h-4" />
             </a>
             <a
-              href="mailto:sheri@glsadvisory.com"
+              href={`mailto:${emailAddress}`}
               aria-label="Direct Email"
               className="text-[#1F3B36]/70 hover:text-[#1F3B36] transition-colors p-1"
             >
@@ -150,6 +159,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking, onNavigate, bgWhi
             </a>
           </div>
         </div>
+
       </div>
     </footer>
   );

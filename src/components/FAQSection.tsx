@@ -25,10 +25,10 @@ export const FAQSection: React.FC<FAQSectionProps> = ({ onOpenBooking }) => {
   };
 
   return (
-    <section className="py-24 sm:py-32 bg-[#FFF9F3]" id="faq">
+    <section className="py-14 sm:py-20 bg-[#FFF9F3]" id="faq">
       <div className="max-w-4xl mx-auto px-6 sm:px-10 lg:px-12">
         {/* Section Heading - Enlarged with 281B0C */}
-        <div className="text-center mb-16 sm:mb-20">
+        <div className="text-center mb-10 sm:mb-14">
           <h2 className="text-5xl sm:text-6xl lg:text-[4.25rem] font-serif italic text-[#281B0C] tracking-tight">
             FAQ
           </h2>

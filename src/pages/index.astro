@@ -11,6 +11,7 @@ import { FAQSection } from '../components/FAQSection';
 import { ClosingCta } from '../components/ClosingCta';
 import { Footer } from '../components/Footer';
 import { SectionRenderer } from '../components/SectionRenderer';
+import { EmailToolPopup } from '../components/EmailToolPopup';
 import { getHomePageData } from '../lib/sanity/api';
 
 const homeData = await getHomePageData();
@@ -38,11 +39,11 @@ const homeData = await getHomePageData();
         <!-- Video Carousel: Interactive Island for video preview playback -->
         <VideoCarousel client:visible />
 
-        <!-- Pricing: Interactive Tier selection linking to booking -->
-        <Pricing client:visible />
-
         <!-- Who we aren't: Static comparison table -->
         <ComparisonTable />
+
+        <!-- Pricing: Interactive Tier selection linking to booking -->
+        <Pricing client:visible />
 
         <!-- FAQ: Interactive Accordion Island -->
         <FAQSection client:visible />
@@ -55,4 +56,7 @@ const homeData = await getHomePageData();
 
   <!-- Static Footer -->
   <Footer client:load />
+
+  <!-- Try out this free tool popup -->
+  <EmailToolPopup client:load />
 </BaseLayout>

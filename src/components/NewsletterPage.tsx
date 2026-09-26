@@ -41,8 +41,9 @@ export const NewsletterPage: React.FC<NewsletterPageProps> = ({
 
       {/* Main Container */}
       <section className="py-12 sm:py-20 max-w-3xl mx-auto px-6 sm:px-10 flex-1 w-full">
-        <div className="bg-[#FFF9F3]/60 border border-[#0D4049]/20 rounded-[2rem] p-8 sm:p-12 lg:p-14 shadow-xs relative overflow-hidden">
+        <div className="bg-[#FFF9F3] border-2 border-[#0D4049] rounded-none p-8 sm:p-12 lg:p-14 shadow-md relative overflow-hidden">
           {isSubmitted ? (
+
             <div className="text-center py-10 space-y-4">
               <div className="w-16 h-16 bg-[#BDC67A]/30 text-[#0D4049] rounded-full flex items-center justify-center mx-auto mb-4">
                 <CheckCircle2 className="w-9 h-9" />

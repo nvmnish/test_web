@@ -27,11 +27,11 @@ export const ClosingCta: React.FC<ClosingCtaProps> = ({ onOpenBooking, onOpenHea
     else window.dispatchEvent(new CustomEvent('open-heavy-modal'));
   };
   return (
-    <section className="py-20 sm:py-28 bg-[#FFF9F3]" id="closing-cta">
+    <section className="py-14 sm:py-20 bg-[#FFF9F3]" id="closing-cta">
       <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-12">
         
-        {/* Large Chartreuse/Olive Landscape Card - Extended on the right with a bigger photo card */}
-        <div className="bg-[#C4D588] rounded-[2.5rem] p-6 sm:p-10 lg:p-14 shadow-sm relative overflow-hidden max-w-6xl mx-auto">
+        {/* Large Chartreuse/Olive Landscape Card - Edges sharp (rounded-none) */}
+        <div className="bg-[#C4D588] rounded-none p-6 sm:p-10 lg:p-14 shadow-sm relative overflow-hidden max-w-6xl mx-auto">
           {/* Subtle noise pattern */}
           <div className="absolute inset-0 bg-noise opacity-50 mix-blend-multiply pointer-events-none"></div>
 
@@ -43,7 +43,7 @@ export const ClosingCta: React.FC<ClosingCtaProps> = ({ onOpenBooking, onOpenHea
                 The Working Philosophy
               </span>
               <p className="text-2xl sm:text-3xl lg:text-[2.35rem] font-serif italic text-[#1F3B36] leading-snug">
-                &ldquo;I work with people who are great at what they do. My job is making sure the right people know it..&rdquo;
+                &ldquo;I work with people who are great at what they do. My job is making sure the right people know it.&rdquo;
               </p>
               <div className="mt-6 flex items-center gap-3">
                 <div className="w-10 h-0.5 bg-[#1F3B36]/30"></div>
@@ -53,14 +53,14 @@ export const ClosingCta: React.FC<ClosingCtaProps> = ({ onOpenBooking, onOpenHea
               </div>
             </div>
 
-            {/* Right Column: Extended green box & significantly bigger photo frame */}
+            {/* Right Column: Photo frame with less rounded corners */}
             <div className="md:col-span-6 lg:col-span-6 flex justify-center md:justify-end">
-              <div className="w-full max-w-[440px] sm:max-w-[480px] lg:max-w-[500px] aspect-[4/3] sm:aspect-[14/10] rounded-[2.25rem] overflow-hidden shadow-lg bg-[#AFC176] border border-white/25">
+              <div className="w-full max-w-[440px] sm:max-w-[480px] lg:max-w-[500px] aspect-[4/3] sm:aspect-[14/10] rounded-sm overflow-hidden shadow-lg bg-[#AFC176] border border-white/25">
                 <img
                   src={verticalWideshotSrc}
                   alt="Sheri Otto presenting"
                   referrerPolicy="no-referrer"
-                  className="w-full h-full object-cover object-top"
+                  className="w-full h-full object-cover object-top rounded-sm"
                 />
               </div>
             </div>
@@ -79,18 +79,18 @@ export const ClosingCta: React.FC<ClosingCtaProps> = ({ onOpenBooking, onOpenHea
             Stop letting what you know stay trapped inside client delivery and team meetings. Let&apos;s turn it into demand.
           </p>
 
-          {/* Action Button Pair - Matched to Hero Buttons styling with rounded-[4px] */}
+          {/* Action Button Pair - Round buttons (rounded-full) */}
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3.5">
             <button
               onClick={handleBooking}
-              className="w-full sm:w-auto bg-[#24423C] hover:bg-[#1A342E] text-white px-7 py-3.5 rounded-[4px] font-medium text-sm sm:text-base tracking-normal transition-all duration-200 shadow-sm cursor-pointer active:scale-[0.99]"
+              className="w-full sm:w-auto bg-[#24423C] hover:bg-[#1A342E] text-white px-8 py-3.5 rounded-full font-medium text-sm sm:text-base tracking-normal transition-all duration-200 shadow-sm cursor-pointer active:scale-[0.99]"
               id="closing-book-call"
             >
               Book a 20-minute gap check
             </button>
             <button
               onClick={handleHeavy}
-              className="w-full sm:w-auto bg-white hover:bg-stone-50 text-[#24423C] px-7 py-3.5 rounded-[4px] font-medium text-sm sm:text-base tracking-normal transition-all duration-200 shadow-sm border border-stone-200 cursor-pointer active:scale-[0.99]"
+              className="w-full sm:w-auto bg-white hover:bg-stone-50 text-[#24423C] px-8 py-3.5 rounded-full font-medium text-sm sm:text-base tracking-normal transition-all duration-200 shadow-sm border border-stone-200 cursor-pointer active:scale-[0.99]"
               id="closing-tell-heavy"
             >
               Or tell me what feels heavy

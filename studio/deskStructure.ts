@@ -91,4 +91,13 @@ export const deskStructure: StructureResolver = (S) =>
             .schemaType('siteSettings')
             .documentId('siteSettings')
         ),
+
+      S.listItem()
+        .title('🦶 Global Footer')
+        .child(
+          S.document()
+            .schemaType('footer')
+            .documentId('footer')
+        ),
     ]);
+

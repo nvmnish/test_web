@@ -39,9 +39,30 @@ export const caseStudy = defineType({
       initialValue: '3 Months In',
     }),
     defineField({
+      name: 'quote',
+      title: 'Primary Quote (Displayed in #536357 between client name line and text block)',
+      type: 'text',
+      rows: 3,
+      description: 'Placed prominently between the separator line under the client name and the expandable story area in #536357 color.',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
       name: 'headline',
       title: 'Result Headline',
       type: 'string',
+    }),
+    defineField({
+      name: 'videoUrl',
+      title: 'Client Video URL / File (Displayed Next to Text Block)',
+      type: 'url',
+      description: 'URL to video MP4, Loom, or streaming clip displayed alongside the case study text block.',
+    }),
+    defineField({
+      name: 'videoPoster',
+      title: 'Video Poster / Thumbnail Image',
+      type: 'image',
+      options: { hotspot: true },
+      description: 'Cover poster thumbnail for the video space.',
     }),
     defineField({
       name: 'statNumber',
@@ -54,44 +75,32 @@ export const caseStudy = defineType({
       type: 'string',
     }),
     defineField({
-      name: 'quote',
-      title: 'Primary Quote',
-      type: 'text',
-      rows: 3,
-    }),
-    defineField({
       name: 'challenge',
-      title: 'The Challenge',
+      title: '01 · The Bottleneck / Challenge',
       type: 'text',
       rows: 3,
     }),
     defineField({
       name: 'approach',
-      title: 'The Approach',
+      title: '02 · The GLS Extraction / Approach',
       type: 'text',
       rows: 3,
     }),
     defineField({
       name: 'outcome',
-      title: 'The Outcome',
+      title: '03 · The Commercial Result / Outcome',
       type: 'text',
       rows: 3,
     }),
     defineField({
       name: 'storyParagraphs',
-      title: 'Narrative Story Paragraphs (For detailed stories like Candice/Diane)',
+      title: 'Narrative Story Paragraphs (For expandable story reading)',
       type: 'array',
       of: [{ type: 'text' }],
     }),
     defineField({
-      name: 'quotes',
-      title: 'Additional Quotes',
-      type: 'array',
-      of: [{ type: 'string' }],
-    }),
-    defineField({
       name: 'clientPhoto',
-      title: 'Client Photo',
+      title: 'Client Portrait / Work Image',
       type: 'image',
       options: { hotspot: true },
     }),
@@ -109,11 +118,4 @@ export const caseStudy = defineType({
       media: 'clientPhoto',
     },
   },
-  orderings: [
-    {
-      title: 'Display Order, Ascending',
-      name: 'orderAsc',
-      by: [{ field: 'order', direction: 'asc' }],
-    },
-  ],
 });

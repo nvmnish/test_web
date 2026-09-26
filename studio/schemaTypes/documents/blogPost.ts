@@ -97,6 +97,43 @@ export const blogPost = defineType({
         },
       ],
     }),
+
+    // Custom Callout Box near end of article
+    defineField({
+      name: 'calloutHeadline',
+      title: 'Diagnostic Callout Headline / Inside Text',
+      type: 'text',
+      rows: 2,
+      initialValue: 'Want to diagnose where your current narrative stalls? You can evaluate your positioning with our free diagnostic scorecard.',
+      description: 'Text displayed inside the #BDC67A callout box in white font.',
+    }),
+    defineField({
+      name: 'calloutButtonText',
+      title: 'Callout Button Label',
+      type: 'string',
+      initialValue: 'Explore Free Diagnostic Tools',
+    }),
+    defineField({
+      name: 'calloutButtonUrl',
+      title: 'Callout Destination Link',
+      type: 'string',
+      initialValue: '/free-tools',
+      description: 'Can lead to any internal path or external link.',
+    }),
+    defineField({
+      name: 'calloutAboveText',
+      title: 'Text Section Above the Callout Box',
+      type: 'text',
+      rows: 2,
+      description: 'Optional introductory text placed directly outside and above the box.',
+    }),
+    defineField({
+      name: 'calloutBelowText',
+      title: 'Text Section Below the Callout Box',
+      type: 'text',
+      rows: 2,
+      description: 'Optional concluding text placed directly outside and below the box.',
+    }),
   ],
   preview: {
     select: {
@@ -105,11 +142,4 @@ export const blogPost = defineType({
       media: 'coverImage',
     },
   },
-  orderings: [
-    {
-      title: 'Published Date, Newest',
-      name: 'publishedAtDesc',
-      by: [{ field: 'publishedAt', direction: 'desc' }],
-    },
-  ],
 });

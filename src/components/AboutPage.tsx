@@ -83,16 +83,16 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate, onOpenBooking,
             </div>
           </div>
 
-          {/* Right Column Photo Card */}
+          {/* Right Column Photo Card: slightly rounded (rounded-lg) */}
           <div className="lg:col-span-5 flex justify-center">
             <div className="relative w-full max-w-sm">
-              <div className="absolute inset-0 bg-[#A9D6D4] rounded-3xl translate-x-4 translate-y-4"></div>
-              <div className="relative z-10 aspect-4/5 rounded-3xl overflow-hidden bg-[#0D4049] shadow-lg">
+              <div className="absolute inset-0 bg-[#A9D6D4] rounded-lg translate-x-4 translate-y-4"></div>
+              <div className="relative z-10 aspect-4/5 rounded-lg overflow-hidden bg-[#0D4049] shadow-lg">
                 <img
                   src={activeBioImg}
                   alt="Sheri Otto"
                   referrerPolicy="no-referrer"
-                  className="w-full h-full object-cover object-center"
+                  className="w-full h-full object-cover object-center rounded-lg"
                 />
               </div>
             </div>

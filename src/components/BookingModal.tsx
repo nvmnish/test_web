@@ -96,7 +96,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/60 backdrop-blur-xs animate-fadeIn overflow-y-auto">
       <div
-        className="bg-white rounded-[2rem] max-w-2xl w-full shadow-2xl relative border border-stone-200 overflow-hidden my-auto max-h-[94vh] flex flex-col"
+        className="bg-white rounded-xl max-w-2xl w-full shadow-2xl relative border border-stone-200 overflow-hidden my-auto max-h-[94vh] flex flex-col"
         id="booking-modal"
       >
         {/* Modal Header: Clean title without dot or tag */}
@@ -191,7 +191,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                         <button
                           type="button"
                           onClick={() => setRole('founder')}
-                          className={`py-2 px-3 rounded-xl border text-center text-xs font-medium cursor-pointer transition-all ${
+                          className={`py-2 px-3 rounded-md border text-center text-xs font-medium cursor-pointer transition-all ${
                             role === 'founder'
                               ? 'bg-[#24423C] text-white border-[#24423C] shadow-xs font-semibold'
                               : 'border-stone-200 text-stone-700 hover:bg-stone-50 bg-white'
@@ -202,7 +202,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                         <button
                           type="button"
                           onClick={() => setRole('marketing')}
-                          className={`py-2 px-3 rounded-xl border text-center text-xs font-medium cursor-pointer transition-all ${
+                          className={`py-2 px-3 rounded-md border text-center text-xs font-medium cursor-pointer transition-all ${
                             role === 'marketing'
                               ? 'bg-[#24423C] text-white border-[#24423C] shadow-xs font-semibold'
                               : 'border-stone-200 text-stone-700 hover:bg-stone-50 bg-white'
@@ -225,7 +225,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                           value={name}
                           onChange={(e) => setName(e.target.value)}
                           placeholder="e.g. Alex Morgan"
-                          className="w-full px-3.5 py-2.5 rounded-xl border border-stone-200 bg-white focus:outline-none focus:border-[#24423C] text-stone-800 text-xs sm:text-sm"
+                          className="w-full px-3.5 py-2.5 rounded-md border border-stone-200 bg-white focus:outline-none focus:border-[#24423C] text-stone-800 text-xs sm:text-sm"
                         />
                       </div>
                       <div>
@@ -238,7 +238,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
                           placeholder="alex@company.com"
-                          className="w-full px-3.5 py-2.5 rounded-xl border border-stone-200 bg-white focus:outline-none focus:border-[#24423C] text-stone-800 text-xs sm:text-sm"
+                          className="w-full px-3.5 py-2.5 rounded-md border border-stone-200 bg-white focus:outline-none focus:border-[#24423C] text-stone-800 text-xs sm:text-sm"
                         />
                       </div>
                     </div>
@@ -253,7 +253,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                         value={company}
                         onChange={(e) => setCompany(e.target.value)}
                         placeholder="e.g. Acme Technologies"
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-stone-200 bg-white focus:outline-none focus:border-[#24423C] text-stone-800 text-xs sm:text-sm"
+                        className="w-full px-3.5 py-2.5 rounded-md border border-stone-200 bg-white focus:outline-none focus:border-[#24423C] text-stone-800 text-xs sm:text-sm"
                       />
                     </div>
 
@@ -267,7 +267,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                         value={bottleneck}
                         onChange={(e) => setBottleneck(e.target.value)}
                         placeholder="e.g. We write deep technical documentation, but our public essays fall flat..."
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-stone-200 bg-white focus:outline-none focus:border-[#24423C] text-stone-800 text-xs sm:text-sm resize-none"
+                        className="w-full px-3.5 py-2.5 rounded-md border border-stone-200 bg-white focus:outline-none focus:border-[#24423C] text-stone-800 text-xs sm:text-sm resize-none"
                       />
                     </div>
 
@@ -281,7 +281,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                         value={topicsToDiscuss}
                         onChange={(e) => setTopicsToDiscuss(e.target.value)}
                         placeholder="e.g. Discussing our founder-led LinkedIn cadence, transitioning away from our current agency, or launching our next narrative..."
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-stone-200 bg-white focus:outline-none focus:border-[#24423C] text-stone-800 text-xs sm:text-sm resize-none"
+                        className="w-full px-3.5 py-2.5 rounded-md border border-stone-200 bg-white focus:outline-none focus:border-[#24423C] text-stone-800 text-xs sm:text-sm resize-none"
                       />
                     </div>
                   </div>
@@ -306,7 +306,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                             key={day}
                             type="button"
                             onClick={() => setSelectedDay(day)}
-                            className={`py-2 px-2.5 rounded-xl border text-xs text-center font-medium cursor-pointer transition-all ${
+                            className={`py-2 px-2.5 rounded-md border text-xs text-center font-medium cursor-pointer transition-all ${
                               selectedDay === day
                                 ? 'border-[#24423C] bg-[#24423C]/10 text-[#24423C] font-semibold shadow-xs'
                                 : 'border-stone-200 text-stone-600 hover:bg-stone-50 bg-white'
@@ -330,7 +330,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                             key={time}
                             type="button"
                             onClick={() => setSelectedTime(time)}
-                            className={`py-2 px-2.5 rounded-xl border text-xs text-center font-medium cursor-pointer transition-all flex items-center justify-center ${
+                            className={`py-2 px-2.5 rounded-md border text-xs text-center font-medium cursor-pointer transition-all flex items-center justify-center ${
                               selectedTime === time
                                 ? 'border-[#24423C] bg-[#24423C]/10 text-[#24423C] font-semibold shadow-xs'
                                 : 'border-stone-200 text-stone-600 hover:bg-stone-50 bg-white'
@@ -367,7 +367,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                           <div
                             key={tier.id}
                             onClick={() => handleTogglePlan(tier.id)}
-                            className={`p-3.5 rounded-xl border-2 cursor-pointer transition-all select-none ${
+                            className={`p-3.5 rounded-lg border-2 cursor-pointer transition-all select-none ${
                               isSelected
                                 ? 'border-[#24423C] bg-[#F5F8ED] shadow-xs'
                                 : 'border-stone-200 hover:border-stone-300 bg-white'

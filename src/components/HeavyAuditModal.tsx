@@ -42,7 +42,7 @@ export const HeavyAuditModal: React.FC<HeavyAuditModalProps> = ({ isOpen: contro
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn overflow-y-auto">
       <div
-        className="bg-white rounded-[2rem] max-w-lg w-full p-7 sm:p-9 shadow-2xl relative border border-stone-200 my-8 max-h-[92vh] overflow-y-auto"
+        className="bg-white rounded-xl max-w-lg w-full p-7 sm:p-9 shadow-2xl relative border border-stone-200 my-8 max-h-[92vh] overflow-y-auto"
         id="heavy-modal"
       >
         <button
@@ -92,7 +92,7 @@ export const HeavyAuditModal: React.FC<HeavyAuditModalProps> = ({ isOpen: contro
                   value={dealingWith}
                   onChange={(e) => setDealingWith(e.target.value)}
                   placeholder="e.g. 'We build great software, but our message doesn't translate. Our founder spends 10 hours writing posts that fall flat, or our in-house team is spinning their wheels on inconsistent drafts.'"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-stone-200 focus:outline-none focus:border-[#24423C] text-stone-800 text-xs sm:text-sm resize-none leading-relaxed"
+                  className="w-full px-3.5 py-2.5 rounded-md border border-stone-200 focus:outline-none focus:border-[#24423C] text-stone-800 text-xs sm:text-sm resize-none leading-relaxed"
                 />
               </div>
 
@@ -106,7 +106,7 @@ export const HeavyAuditModal: React.FC<HeavyAuditModalProps> = ({ isOpen: contro
                   value={desiredOutcome}
                   onChange={(e) => setDesiredOutcome(e.target.value)}
                   placeholder="e.g. 'Having 3 crystal-clear positioning angles our sales and marketing teams agree on, or knowing exactly how to delegate content without diluting our executive voice.'"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-stone-200 focus:outline-none focus:border-[#24423C] text-stone-800 text-xs sm:text-sm resize-none leading-relaxed"
+                  className="w-full px-3.5 py-2.5 rounded-md border border-stone-200 focus:outline-none focus:border-[#24423C] text-stone-800 text-xs sm:text-sm resize-none leading-relaxed"
                 />
               </div>
 
@@ -120,7 +120,7 @@ export const HeavyAuditModal: React.FC<HeavyAuditModalProps> = ({ isOpen: contro
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="e.g. Alex"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-stone-200 focus:outline-none focus:border-[#24423C] text-stone-800 text-xs sm:text-sm"
+                    className="w-full px-3.5 py-2.5 rounded-md border border-stone-200 focus:outline-none focus:border-[#24423C] text-stone-800 text-xs sm:text-sm"
                   />
                 </div>
                 <div>
@@ -133,7 +133,7 @@ export const HeavyAuditModal: React.FC<HeavyAuditModalProps> = ({ isOpen: contro
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="alex@company.com"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-stone-200 focus:outline-none focus:border-[#24423C] text-stone-800 text-xs sm:text-sm"
+                    className="w-full px-3.5 py-2.5 rounded-md border border-stone-200 focus:outline-none focus:border-[#24423C] text-stone-800 text-xs sm:text-sm"
                   />
                 </div>
               </div>

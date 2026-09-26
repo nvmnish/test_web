@@ -64,6 +64,7 @@ export const caseStudiesPage = defineType({
       group: 'sections',
       of: [
         { type: 'metricsSection' },
+        { type: 'proofCtaSection' },
         { type: 'closingCtaSection' },
         { type: 'faqSection' },
         { type: 'richTextSection' },

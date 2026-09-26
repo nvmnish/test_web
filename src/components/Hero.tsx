@@ -87,12 +87,20 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenHeavyModal, onN
             <div className="lg:col-span-7 flex flex-col items-start order-1 lg:order-1 pr-0 lg:pr-6 xl:pr-10">
               {data?.headline ? (
                 <h1 className="text-4xl sm:text-5xl lg:text-[3.65rem] xl:text-[3.85rem] leading-[1.14] tracking-tight text-white font-sans font-medium whitespace-pre-line">
-                  {data.headline}
+                  {data.headline.includes('doing the work') ? (
+                    <>
+                      {data.headline.split('doing the work')[0]}
+                      <span className="italic font-['Cormorant_Garamond',serif] font-normal text-[1.16em] inline-block">doing the work</span>
+                      {data.headline.split('doing the work')[1]}
+                    </>
+                  ) : (
+                    data.headline
+                  )}
                 </h1>
               ) : (
                 <h1 className="text-4xl sm:text-5xl lg:text-[3.65rem] xl:text-[3.85rem] leading-[1.14] tracking-tight text-white font-sans font-medium">
                   Marketing for people <br />
-                  too busy <span className="italic font-serif font-normal">doing the work</span> <br />
+                  too busy <span className="italic font-['Cormorant_Garamond',serif] font-normal text-[1.16em] inline-block">doing the work</span> <br />
                   to talk about it
                 </h1>
               )}
@@ -105,18 +113,18 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenHeavyModal, onN
                 )}
               </p>
 
-              {/* CTA Actions with subtle rounded corners */}
+              {/* CTA Actions with round buttons */}
               <div className="mt-8 sm:mt-9 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 w-full sm:w-auto">
                 <button
                   onClick={handleBooking}
-                  className="bg-[#24423C] hover:bg-[#1A342E] text-white px-7 py-3.5 rounded-[4px] font-medium text-sm sm:text-base tracking-normal transition-all duration-200 shadow-sm text-center cursor-pointer active:scale-[0.99] relative z-20"
+                  className="bg-[#24423C] hover:bg-[#1A342E] text-white px-8 py-3.5 rounded-full font-medium text-sm sm:text-base tracking-normal transition-all duration-200 shadow-sm text-center cursor-pointer active:scale-[0.99] relative z-20"
                   id="hero-book-gap-check"
                 >
                   {data?.primaryCta || 'Book a 20-minute gap check'}
                 </button>
                 <button
                   onClick={handleHeavy}
-                  className="bg-white hover:bg-stone-50 text-[#24423C] px-7 py-3.5 rounded-[4px] font-medium text-sm sm:text-base tracking-normal transition-all duration-200 shadow-sm border border-white/60 text-center cursor-pointer active:scale-[0.99] relative z-20"
+                  className="bg-white hover:bg-stone-50 text-[#24423C] px-8 py-3.5 rounded-full font-medium text-sm sm:text-base tracking-normal transition-all duration-200 shadow-sm border border-white/60 text-center cursor-pointer active:scale-[0.99] relative z-20"
                   id="hero-tell-heavy"
                 >
                   {data?.secondaryCta || 'Or tell me what feels heavy'}
@@ -124,22 +132,22 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenHeavyModal, onN
               </div>
             </div>
 
-            {/* Right Column: Photo and Overlap Element, all corners rounded */}
+            {/* Right Column: Photo and Overlap Element, just slightly rounded (rounded-lg) */}
             <div className="lg:col-span-5 flex justify-center lg:justify-end order-2 lg:order-2 pl-0 lg:pl-4 xl:pl-6">
               <div className="relative w-full max-w-[340px] sm:max-w-[390px] xl:max-w-[420px]">
-                {/* Blue/Teal square behind it: shifted, all corners rounded - Color: #A9D6D4 */}
+                {/* Blue/Teal square behind it: shifted, slightly rounded (rounded-lg) - Color: #A9D6D4 */}
                 <div 
-                  className="absolute inset-0 translate-x-[24px] sm:translate-x-[32px] translate-y-[32px] sm:translate-y-[42px] bg-[#A9D6D4] rounded-[2.5rem] sm:rounded-[3.25rem] pointer-events-none"
+                  className="absolute inset-0 translate-x-[24px] sm:translate-x-[32px] translate-y-[32px] sm:translate-y-[42px] bg-[#A9D6D4] rounded-lg pointer-events-none"
                   aria-hidden="true"
                 />
 
-                {/* Foreground Photo Card: Square aspect ratio (1:1), all corners rounded */}
-                <div className="relative z-10 w-full aspect-square rounded-[2.5rem] sm:rounded-[3.25rem] overflow-hidden bg-[#A9D6D4] shadow-md">
+                {/* Foreground Photo Card: Square aspect ratio (1:1), slightly rounded (rounded-lg) */}
+                <div className="relative z-10 w-full aspect-square rounded-lg overflow-hidden bg-[#A9D6D4] shadow-md">
                   <img
                     src={activeHeroImg}
                     alt="Sheri Otto presenting"
                     referrerPolicy="no-referrer"
-                    className="w-full h-full object-cover object-[32%_center]"
+                    className="w-full h-full object-cover object-[32%_center] rounded-lg"
                   />
                 </div>
               </div>
@@ -152,20 +160,20 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenHeavyModal, onN
         <div className="h-4 pointer-events-none" />
       </section>
 
-      {/* Metrics Section - Styled in the exact style example provided in the image with cream palette */}
-      <section className="bg-[#FFF9F3] text-[#1F3B36] py-16 sm:py-20 lg:py-24 relative z-20 border-b border-[#281B0C]/5" id="metrics">
+      {/* Metrics Section - Figtree font, normal weight, color #0D4049 */}
+      <section className="bg-[#FFF9F3] text-[#0D4049] py-12 sm:py-16 relative z-20 border-b border-[#281B0C]/5" id="metrics">
         <div className="max-w-6xl xl:max-w-7xl mx-auto px-6 sm:px-10 lg:px-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 sm:gap-14 lg:gap-16 xl:gap-24 text-left">
             {METRICS.map((metric, idx) => {
               const fillPercent = metric.barPercentage ?? (typeof metric.number === 'number' ? metric.number : 88);
               return (
                 <div key={idx} className="flex flex-col items-start text-left">
-                  {/* Number with Superscript % / x / months in upright Serif */}
-                  <div className="text-8xl sm:text-[6.5rem] lg:text-[7.25rem] xl:text-[7.75rem] font-serif font-normal text-[#1F3B36] leading-none tracking-tight flex items-start select-none">
+                  {/* Number with Superscript % / x / months in Figtree Normal */}
+                  <div className="text-8xl sm:text-[6.5rem] lg:text-[7.25rem] xl:text-[7.75rem] font-['Figtree',sans-serif] font-normal text-[#0D4049] leading-none tracking-tight flex items-start select-none">
                     <CasinoSpinNumber
                       value={metric.number}
-                      className="font-serif font-normal text-[#1F3B36] not-italic"
-                      containerClassName="inline-flex items-start font-serif font-normal text-[#1F3B36] not-italic tracking-tight select-none overflow-hidden"
+                      className="font-['Figtree',sans-serif] font-normal text-[#0D4049] not-italic"
+                      containerClassName="inline-flex items-start font-['Figtree',sans-serif] font-normal text-[#0D4049] not-italic tracking-tight select-none overflow-hidden"
                     />
                     {metric.suffix && (
                       <span 
@@ -173,12 +181,13 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenHeavyModal, onN
                           metric.suffix.trim().length <= 2 
                             ? 'text-3xl sm:text-4xl lg:text-5xl -mt-1' 
                             : 'text-2xl sm:text-3xl lg:text-[2.25rem] -mt-0.5 sm:-mt-1'
-                        } font-serif font-normal text-[#1F3B36] ml-1 sm:ml-1.5 select-none self-start`}
+                        } font-['Figtree',sans-serif] font-normal text-[#0D4049] ml-1 sm:ml-1.5 select-none self-start`}
                       >
                         {metric.suffix.trim()}
                       </span>
                     )}
                   </div>
+
 
                   {/* Accent Progress Bar: Orange fill with subtle warm track */}
                   <div className="w-full h-[3px] bg-[#281B0C]/12 mt-7 mb-5 overflow-hidden flex rounded-full">

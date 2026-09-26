@@ -3,10 +3,10 @@ import { COMPARISON_DATA } from '../data/content';
 
 export const ComparisonTable: React.FC = () => {
   return (
-    <section className="py-24 sm:py-32 bg-[#FFF9F3]" id="who-we-arent">
+    <section className="py-14 sm:py-20 bg-[#FFF9F3]" id="who-we-arent">
       <div className="max-w-6xl mx-auto px-6 sm:px-10 lg:px-12">
         {/* Section Heading matching image.png */}
-        <div className="text-center max-w-2xl mx-auto mb-14 sm:mb-18">
+        <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
           <h2 className="text-5xl sm:text-6xl lg:text-[4.25rem] font-serif italic text-[#281B0C] tracking-tight">
             Who we aren&apos;t
           </h2>

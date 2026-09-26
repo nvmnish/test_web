@@ -31,6 +31,13 @@ export const resourceItem = defineType({
       description: 'e.g. PDF Guide + Notion Interview Template',
     }),
     defineField({
+      name: 'photoTagText',
+      title: 'Green Tag Text on Photo',
+      type: 'string',
+      initialValue: 'Format: Instant Download & Templates',
+      description: 'Customizable badge text displayed over the preview photo.',
+    }),
+    defineField({
       name: 'ctaText',
       title: 'CTA Button Text',
       type: 'string',
@@ -47,6 +54,50 @@ export const resourceItem = defineType({
         ],
       },
       initialValue: 'download',
+    }),
+    defineField({
+      name: 'featureList',
+      title: "What's Included List Items",
+      type: 'array',
+      of: [{ type: 'string' }],
+    }),
+    defineField({
+      name: 'reviews',
+      title: 'User Reviews & Stars',
+      type: 'array',
+      description: 'Stars, quote in Figtree, and author name for this tool.',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'filledStars',
+              title: 'Number of Filled Stars (1 to 5)',
+              type: 'number',
+              initialValue: 5,
+              validation: (Rule) => Rule.min(1).max(5),
+            }),
+            defineField({
+              name: 'quote',
+              title: 'Review Quote (in Figtree font)',
+              type: 'text',
+              rows: 2,
+              validation: (Rule) => Rule.required(),
+            }),
+            defineField({
+              name: 'name',
+              title: 'Reviewer Name',
+              type: 'string',
+              validation: (Rule) => Rule.required(),
+            }),
+            defineField({
+              name: 'role',
+              title: 'Reviewer Role / Company (Optional)',
+              type: 'string',
+            }),
+          ],
+        },
+      ],
     }),
     defineField({
       name: 'downloadFile',

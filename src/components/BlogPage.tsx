@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowLeft, BookOpen, Clock, ArrowRight } from 'lucide-react';
 import { Navbar, PageView } from './Navbar';
-
 import { SectionRenderer } from './SectionRenderer';
+import { BlogPostPage, BlogPostData } from './BlogPostPage';
 
 interface BlogPageProps {
   onNavigate?: (page: PageView) => void;
@@ -10,81 +10,159 @@ interface BlogPageProps {
   data?: any;
 }
 
-interface ArticlePlaceholder {
-  id: string | number;
-  title: string;
-  excerpt: string;
-  category: string;
-  readTime: string;
-  date: string;
+interface ArticlePlaceholder extends BlogPostData {
   featured?: boolean;
 }
 
 const ARTICLES: ArticlePlaceholder[] = [
   {
-    id: 1,
+    id: 'why-nobody-outside-can-tell-what-your-company-actually-does',
     title: 'Why Nobody Outside Can Tell What Your Company Actually Does',
     excerpt: 'You are answering 20 questions a day from clients and your team, but your public message sounds like a committee-approved press release. Here is where the signal is getting lost.',
     category: 'Positioning',
     readTime: '4 min read',
     date: 'Sep 14, 2026',
     featured: true,
+    coverImage: '/assets/images/content_photo.jpg',
+    bodyParagraphs: [
+      {
+        type: 'subheading',
+        text: 'The Internal Clarity vs. External Fog Paradox',
+      },
+      {
+        type: 'paragraph',
+        text: 'Inside your company, you and your senior team speak with surgical precision. When a prospective enterprise client asks about system integration, security parameters, or timeline guarantees, your answers are grounded, specific, and backed by years of operating scar tissue.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Then someone clicks over to your homepage or opens your corporate brochure. What do they find? "We deliver synergistic, agile transformation for the modern hybrid organization." A sentence so utterly devoid of friction that it could describe 10,000 different consulting agencies.',
+      },
+      {
+        type: 'quote',
+        text: '“When you try to sound like an enterprise company, you end up sounding like a committee in a conference room. High-value buyers don’t hire committees; they hire leaders with conviction.”',
+      },
+      {
+        type: 'heading',
+        text: 'Where the Commercial Signal Gets Leaked',
+      },
+      {
+        type: 'paragraph',
+        text: 'The signal is lost because most B2B positioning is written backwards. Instead of capturing what happens on real sales calls and technical delivery debriefs, founders hire a branding agency to "invent" a message. That agency holds focus groups, looks at competitor landing pages, and normalizes every sharp edge until the message is completely safe—and entirely unmemorable.',
+      },
+      {
+        type: 'bulletList',
+        items: [
+          'Fear of disqualifying unqualified prospects: In an effort to keep the top of funnel wide, you use umbrella terms that mean nothing to the top 5% of ideal buyers.',
+          'Delegating narrative to copywriters with zero operating context: Writing without lived experience always defaults to adjectives instead of mechanisms.',
+          'Treating positioning as marketing collateral instead of executive strategy: Your positioning isn\'t a tagline; it is the reason a buyer chooses you over doing nothing.',
+        ],
+      },
+      {
+        type: 'heading',
+        text: 'The 3-Step Extraction Reset',
+      },
+      {
+        type: 'paragraph',
+        text: 'Step 1: Record your next three client kickoff calls. Listen for the exact words the client uses to describe the problem right before they signed.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Step 2: Identify your single most controversial operational belief. What do you do that competitors refuse to do because it requires real work?',
+      },
+      {
+        type: 'paragraph',
+        text: 'Step 3: Replace every generic adjective on your site with a verifiable operating constraint.',
+      },
+    ],
   },
   {
-    id: 2,
+    id: 'the-45-minute-ghostwriting-trap',
     title: 'The 45-Minute Ghostwriting Trap (And Why Most AI Posts Fall Flat)',
     excerpt: 'Why generic LinkedIn frameworks dilute hard-won founder authority, and how to capture lived operating experience verbatim instead.',
     category: 'Content Strategy',
     readTime: '6 min read',
     date: 'Sep 08, 2026',
+    coverImage: '/assets/images/content_photo.jpg',
+    bodyParagraphs: [
+      {
+        type: 'subheading',
+        text: 'The Rise of the Ghostwriting Factory',
+      },
+      {
+        type: 'paragraph',
+        text: 'Over the last two years, LinkedIn feeds have been overrun by a predictable formula: a dramatic hook about waking up at 4:30 AM, followed by a numbered list of five habits, ending with "Agree?".',
+      },
+      {
+        type: 'paragraph',
+        text: 'For a founder selling a $100,000 advisory engagement or a complex SaaS contract, this kind of content is not just ineffective—it is brand suicide. Your prospective buyers are CFOs, VP of Engineering, and Board Chairs. When they see their peer posting generic motivational clichés, their perceived authority instantly drops.',
+      },
+      {
+        type: 'quote',
+        text: '“High-ticket buyers do not evaluate you based on posting frequency. They evaluate you based on the depth of your operational judgment.”',
+      },
+      {
+        type: 'heading',
+        text: 'The Verbatim Voice Bank Alternative',
+      },
+      {
+        type: 'paragraph',
+        text: 'Rather than outsourcing your writing to someone who guesses your thoughts, the only scalable model is an oral extraction engine: 45 minutes of recorded voice debriefing real client problems. We capture the cadence, colloquialisms, and direct insights, and format them into rigorous category essays.',
+      },
+    ],
   },
   {
-    id: 3,
+    id: 'how-shelia-landed-3-commercial-projects',
     title: 'How Shelia Landed 3 Commercial Projects from a Single Post',
     excerpt: 'A deep dive into how a zero-post builder turned client conversations into an organic pipeline that brought developers straight to her inbox.',
     category: 'Case Analysis',
     readTime: '5 min read',
     date: 'Aug 29, 2026',
+    coverImage: '/assets/images/content_photo.jpg',
   },
   {
-    id: 4,
+    id: 'when-marketing-ships-everything-and-nothing-lands',
     title: 'When Marketing Ships Everything and Nothing Lands',
     excerpt: 'Inside the sprint burnout of modern in-house marketing teams, and how to shift from task delivery to market trust.',
     category: 'In-House Teams',
     readTime: '7 min read',
     date: 'Aug 21, 2026',
+    coverImage: '/assets/images/content_photo.jpg',
   },
   {
-    id: 5,
+    id: 'the-3-numbers-every-b2b-founder-needs',
     title: 'The 3 Numbers Every B2B Founder Needs in Their Head Before a Call',
     excerpt: 'How clarity on your benchmark customer, your core constraint, and your real unit economics turns casual conversations into enterprise buyers.',
     category: 'Sales Alignment',
     readTime: '4 min read',
     date: 'Aug 12, 2026',
+    coverImage: '/assets/images/content_photo.jpg',
   },
   {
-    id: 6,
+    id: 'doubling-academy-enrollment',
     title: 'Doubling Academy Enrollment: The Story Behind Dixon Early Academy',
     excerpt: 'Roslyn never ran marketing before June. By the end of the quarter her enrollment jumped from 28% to 56%. Here is the operational cadence behind the shift.',
     category: 'Case Analysis',
     readTime: '5 min read',
     date: 'Jul 28, 2026',
+    coverImage: '/assets/images/content_photo.jpg',
   },
   {
-    id: 7,
+    id: 'stop-posting-tips',
     title: 'Stop Posting Tips: Why High-Ticket Buyers Ignore Generic How-Tos',
     excerpt: 'Enterprise leaders do not buy from top-10 lists. They buy when someone articulates the silent friction inside their quarterly boardroom.',
     category: 'Positioning',
     readTime: '6 min read',
     date: 'Jul 15, 2026',
+    coverImage: '/assets/images/content_photo.jpg',
   },
   {
-    id: 8,
+    id: 'the-executive-narrative-matrix',
     title: 'The Executive Narrative Matrix: From Chaos to Consistent Pipeline',
     excerpt: 'The exact framework we use during our 45-minute recording sessions to extract category-defining thought leadership.',
     category: 'Methodology',
     readTime: '5 min read',
     date: 'Jul 04, 2026',
+    coverImage: '/assets/images/content_photo.jpg',
   },
 ];
 
@@ -117,6 +195,37 @@ export const BlogPage: React.FC<BlogPageProps> = ({ onNavigate, onOpenBooking, d
 
   const heroHeadline = data?.heroHeadline || 'The GLS Journal';
   const heroSubheadline = data?.heroSubheadline || 'Tactical essays, message teardowns, and framework breakdowns for leaders who want their expertise to match their market visibility.';
+
+  // Check URL on mount / update
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const articleParam = new URLSearchParams(window.location.search).get('article');
+      if (articleParam) {
+        const found = articlesList.find((a) => String(a.id) === articleParam);
+        if (found) setSelectedArticle(found);
+      }
+    }
+  }, [articlesList]);
+
+  // When an article is clicked, open standard full-page blog post template
+  if (selectedArticle) {
+    return (
+      <BlogPostPage
+        post={selectedArticle}
+        onBack={() => {
+          setSelectedArticle(null);
+          if (typeof window !== 'undefined') {
+            const url = new URL(window.location.href);
+            url.searchParams.delete('article');
+            window.history.pushState(null, '', url.pathname + (url.search ? url.search : ''));
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        }}
+        onNavigate={onNavigate}
+        onOpenBooking={handleBooking}
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#FFF9F3] text-[#1E2E2A] font-sans antialiased flex flex-col">
@@ -157,68 +266,7 @@ export const BlogPage: React.FC<BlogPageProps> = ({ onNavigate, onOpenBooking, d
         </div>
       </section>
 
-      {/* Article Detail View Modal */}
-      {selectedArticle && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs">
-          <div className="bg-[#FFFDF9] rounded-[2rem] max-w-2xl w-full p-8 sm:p-12 shadow-2xl relative max-h-[85vh] overflow-y-auto">
-            <button
-              onClick={() => setSelectedArticle(null)}
-              className="absolute top-6 right-6 text-[#536357] hover:text-[#0D4049] text-sm font-semibold cursor-pointer"
-            >
-              ✕ Close
-            </button>
-            <span className="text-xs font-semibold uppercase tracking-wider text-[#0D4049] bg-[#BDC67A]/35 px-3 py-1 rounded-sm inline-block mb-4">
-              {selectedArticle.category}
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#0D4049] mb-4 leading-snug">
-              {selectedArticle.title}
-            </h2>
-            <div className="flex items-center gap-4 text-xs text-[#536357] font-sans mb-8">
-              <span>{selectedArticle.date}</span>
-              <span>·</span>
-              <span>{selectedArticle.readTime}</span>
-              <span>·</span>
-              <span>By Sheri Otto</span>
-            </div>
-            <div className="prose prose-stone max-w-none text-[#536357] leading-relaxed space-y-4 font-sans text-sm sm:text-base">
-              <p className="text-base sm:text-lg font-medium text-[#0D4049]">
-                {selectedArticle.excerpt}
-              </p>
-              <p>
-                When you run an active company, the daily operational gravity is immense. You answer client inquiries, unblock team leads, and navigate delivery deadlines. By the time 6:00 PM arrives, the thought of sitting down to author a high-signal article feels exhausting.
-              </p>
-              <p>
-                This is why most leaders default to generic inspirational soundbites or delegate posting to junior marketing associates who lack the lived experience of steering a multi-million-dollar operation.
-              </p>
-              <p className="bg-[#A9D6D4]/20 p-4 rounded-xl border border-[#A9D6D4] text-[#0D4049] italic font-serif text-lg">
-                &ldquo;Real thought leadership isn&apos;t written from a whiteboard. It is extracted from the friction of your everyday business decisions.&rdquo;
-              </p>
-              <p>
-                To fix this, shift away from writing from scratch. Spend 45 minutes bi-weekly speaking into a recording device while reacting to three specific client interactions from the past fortnight. That recording contains the raw commercial signal your future clients need to hear before they reach out.
-              </p>
-            </div>
-            <div className="mt-8 pt-6 border-t border-[#536357]/20 flex justify-between items-center">
-              <button
-                onClick={() => {
-                  setSelectedArticle(null);
-                  handleBooking();
-                }}
-                className="bg-[#0D4049] hover:bg-[#08292E] text-white px-6 py-3 rounded-md text-xs sm:text-sm font-semibold transition-colors cursor-pointer"
-              >
-                Discuss this with Sheri
-              </button>
-              <button
-                onClick={() => setSelectedArticle(null)}
-                className="text-[#536357] hover:text-[#0D4049] text-xs sm:text-sm cursor-pointer"
-              >
-                Back to articles
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Grid of 8 Placeholders */}
+      {/* Grid of Articles */}
       <section className="max-w-6xl mx-auto px-6 sm:px-10 pb-24 flex-1">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filtered.map((article) => {
@@ -240,8 +288,16 @@ export const BlogPage: React.FC<BlogPageProps> = ({ onNavigate, onOpenBooking, d
             return (
               <article
                 key={article.id}
-                onClick={() => setSelectedArticle(article)}
-                className="bg-[#FFFDF9] rounded-[1.75rem] p-7 sm:p-8 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 shadow-none hover:shadow-xl cursor-pointer group"
+                onClick={() => {
+                  setSelectedArticle(article);
+                  if (typeof window !== 'undefined') {
+                    const url = new URL(window.location.href);
+                    url.searchParams.set('article', String(article.id));
+                    window.history.pushState(null, '', url.toString());
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }
+                }}
+                className="bg-[#FFFDF9] rounded-lg p-7 sm:p-8 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 shadow-none hover:shadow-xl cursor-pointer group"
               >
                 <div>
                   <div className="flex items-center justify-between mb-4">

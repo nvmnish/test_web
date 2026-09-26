@@ -26,12 +26,16 @@ import { pricingSection } from './sections/pricingSection';
 import { comparisonSection } from './sections/comparisonSection';
 import { faqSection } from './sections/faqSection';
 import { closingCtaSection } from './sections/closingCtaSection';
+import { proofCtaSection } from './sections/proofCtaSection';
 import { richTextSection } from './sections/richTextSection';
 import { mediaCalloutSection } from './sections/mediaCalloutSection';
+import { popupToolSection } from './sections/popupToolSection';
+import { footer } from './documents/footer';
 
 export const schemaTypes = [
   // Site & Global
   siteSettings,
+  footer,
 
   // Pages
   homePage,
@@ -54,6 +58,7 @@ export const schemaTypes = [
   heroSection,
   whoWeServeSection,
   metricsSection,
+  proofCtaSection,
   clientStoriesSection,
   videoCarouselSection,
   pricingSection,
@@ -62,4 +67,6 @@ export const schemaTypes = [
   closingCtaSection,
   richTextSection,
   mediaCalloutSection,
+  popupToolSection,
 ];
+

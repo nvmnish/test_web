@@ -2,18 +2,18 @@ import { defineField, defineType } from 'sanity';
 
 export const clientStoriesSection = defineType({
   name: 'clientStoriesSection',
-  title: 'Client Stories Section',
+  title: 'Client Stories / Quotes Section',
   type: 'object',
   fields: [
     defineField({
       name: 'title',
       title: 'Section Identifier / Title',
       type: 'string',
-      initialValue: 'Client Stories',
+      initialValue: 'Client Stories & Proof Quotes',
     }),
     defineField({
       name: 'stories',
-      title: 'Client Stories',
+      title: 'Client Quotes & Stories',
       type: 'array',
       of: [
         {
@@ -45,16 +45,31 @@ export const clientStoriesSection = defineType({
               initialValue: 'Three months into working together',
             }),
             defineField({
-              name: 'storyLead',
-              title: 'Story Lead Paragraph',
-              type: 'text',
-              rows: 2,
-            }),
-            defineField({
-              name: 'storyBody',
-              title: 'Story Details Paragraph',
+              name: 'paragraph',
+              title: 'Story Paragraph (Underneath Quote in Figtree Font)',
               type: 'text',
               rows: 3,
+              description: 'Appears directly underneath the quote in Figtree grey font.',
+            }),
+            defineField({
+              name: 'photo',
+              title: 'Client / Work Photo',
+              type: 'image',
+              options: { hotspot: true },
+              description: 'Image displayed on the right for Quote 1, or on the left for Quote 2.',
+            }),
+            defineField({
+              name: 'imagePlacement',
+              title: 'Image Placement',
+              type: 'string',
+              options: {
+                list: [
+                  { title: 'Right side of quote', value: 'right' },
+                  { title: 'Left side of page', value: 'left' },
+                ],
+                layout: 'radio',
+              },
+              initialValue: 'right',
             }),
             defineField({
               name: 'ctaText',
@@ -67,6 +82,7 @@ export const clientStoriesSection = defineType({
             select: {
               title: 'clientName',
               subtitle: 'quote',
+              media: 'photo',
             },
           },
         },
@@ -79,8 +95,8 @@ export const clientStoriesSection = defineType({
     },
     prepare({ stories }) {
       return {
-        title: 'Client Stories Section',
-        subtitle: `${stories?.length || 0} stories configured`,
+        title: 'Client Quotes & Stories Section',
+        subtitle: `${stories?.length || 0} quotes configured`,
       };
     },
   },
