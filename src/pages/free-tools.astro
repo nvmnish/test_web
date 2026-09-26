@@ -2,12 +2,15 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { FreeToolsPage } from '../components/FreeToolsPage';
 import { Footer } from '../components/Footer';
+import { getFreeToolsPageData } from '../lib/sanity/api';
+
+const freeToolsData = await getFreeToolsPageData();
 ---
 
 <BaseLayout
-  title="Free Executive Marketing Tools & Diagnostic Kits — GLS."
-  description="Run internal diagnostics, grab our 45-minute oral extraction cheatsheet, and score your market differentiation with our free resources."
+  title={freeToolsData.seo?.title || "Free Executive Marketing Tools & Diagnostic Kits — GLS."}
+  description={freeToolsData.seo?.description || "Run internal diagnostics, grab our 45-minute oral extraction cheatsheet, and score your market differentiation with our free resources."}
 >
-  <FreeToolsPage client:load />
+  <FreeToolsPage client:load data={freeToolsData} />
   <Footer client:load />
 </BaseLayout>

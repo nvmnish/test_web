@@ -2,13 +2,16 @@ import React, { useState } from 'react';
 import { ArrowLeft, BookOpen, Clock, ArrowRight } from 'lucide-react';
 import { Navbar, PageView } from './Navbar';
 
+import { SectionRenderer } from './SectionRenderer';
+
 interface BlogPageProps {
   onNavigate?: (page: PageView) => void;
   onOpenBooking?: () => void;
+  data?: any;
 }
 
 interface ArticlePlaceholder {
-  id: number;
+  id: string | number;
   title: string;
   excerpt: string;
   category: string;
@@ -85,7 +88,7 @@ const ARTICLES: ArticlePlaceholder[] = [
   },
 ];
 
-export const BlogPage: React.FC<BlogPageProps> = ({ onNavigate, onOpenBooking }) => {
+export const BlogPage: React.FC<BlogPageProps> = ({ onNavigate, onOpenBooking, data }) => {
   const [activeCategory, setActiveCategory] = useState<string>('All');
   const [selectedArticle, setSelectedArticle] = useState<ArticlePlaceholder | null>(null);
 
@@ -94,11 +97,26 @@ export const BlogPage: React.FC<BlogPageProps> = ({ onNavigate, onOpenBooking })
     else window.dispatchEvent(new CustomEvent('open-booking-modal'));
   };
 
-  const categories = ['All', 'Positioning', 'Content Strategy', 'In-House Teams', 'Case Analysis'];
+  const articlesList: ArticlePlaceholder[] = data?.posts && data.posts.length > 0
+    ? data.posts.map((p: any) => ({
+        id: p._id || p.id || p.title,
+        title: p.title,
+        excerpt: p.excerpt || '',
+        category: p.category || 'Positioning',
+        readTime: p.readTime || '4 min read',
+        date: p.publishedAt ? new Date(p.publishedAt).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }) : (p.date || 'Recent'),
+        featured: p.featured,
+      }))
+    : ARTICLES;
+
+  const categories = ['All', ...Array.from(new Set(articlesList.map(a => a.category).filter(Boolean)))];
 
   const filtered = activeCategory === 'All' 
-    ? ARTICLES 
-    : ARTICLES.filter(a => a.category === activeCategory);
+    ? articlesList 
+    : articlesList.filter(a => a.category === activeCategory);
+
+  const heroHeadline = data?.heroHeadline || 'The GLS Journal';
+  const heroSubheadline = data?.heroSubheadline || 'Tactical essays, message teardowns, and framework breakdowns for leaders who want their expertise to match their market visibility.';
 
   return (
     <div className="min-h-screen bg-[#FFF9F3] text-[#1E2E2A] font-sans antialiased flex flex-col">
@@ -115,10 +133,10 @@ export const BlogPage: React.FC<BlogPageProps> = ({ onNavigate, onOpenBooking })
           Editorial &amp; Insights
         </span>
         <h1 className="text-5xl sm:text-6xl lg:text-7xl font-serif italic text-[#0D4049] tracking-tight">
-          The GLS Journal
+          {heroHeadline}
         </h1>
         <p className="mt-5 text-base sm:text-lg text-[#536357] font-sans max-w-xl mx-auto leading-relaxed">
-          Tactical essays, message teardowns, and framework breakdowns for leaders who want their expertise to match their market visibility.
+          {heroSubheadline}
         </p>
 
         {/* Category Filters */}
@@ -256,6 +274,15 @@ export const BlogPage: React.FC<BlogPageProps> = ({ onNavigate, onOpenBooking })
           })}
         </div>
       </section>
+
+      {/* Dynamic Sections from Sanity Page Builder */}
+      {data?.sections && (
+        <SectionRenderer 
+          sections={data.sections} 
+          onOpenBooking={handleBooking} 
+          onNavigate={onNavigate} 
+        />
+      )}
     </div>
   );
 };

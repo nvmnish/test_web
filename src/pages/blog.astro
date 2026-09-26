@@ -2,12 +2,15 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { BlogPage } from '../components/BlogPage';
 import { Footer } from '../components/Footer';
+import { getBlogPageData } from '../lib/sanity/api';
+
+const blogData = await getBlogPageData();
 ---
 
 <BaseLayout
-  title="The GLS Journal — Marketing for Busy Leaders"
-  description="Tactical essays, message teardowns, and framework breakdowns for leaders who want their expertise to match their market visibility."
+  title={blogData.seo?.title || "The GLS Journal — Marketing for Busy Leaders"}
+  description={blogData.seo?.description || "Tactical essays, message teardowns, and framework breakdowns for leaders who want their expertise to match their market visibility."}
 >
-  <BlogPage client:load />
+  <BlogPage client:load data={blogData} />
   <Footer client:load />
 </BaseLayout>

@@ -2,14 +2,18 @@ import React, { useState } from 'react';
 import { CheckCircle2, Mail, Sparkles } from 'lucide-react';
 import { Navbar, PageView } from './Navbar';
 
+import { SectionRenderer } from './SectionRenderer';
+
 interface NewsletterPageProps {
   onNavigate?: (page: PageView) => void;
   onOpenBooking?: () => void;
+  data?: any;
 }
 
 export const NewsletterPage: React.FC<NewsletterPageProps> = ({
   onNavigate,
   onOpenBooking,
+  data,
 }) => {
   const [role, setRole] = useState<'founder' | 'team'>('founder');
   const [name, setName] = useState('');
@@ -54,13 +58,13 @@ export const NewsletterPage: React.FC<NewsletterPageProps> = ({
             <div>
               <div className="text-center max-w-xl mx-auto mb-10">
                 <span className="text-xs uppercase tracking-widest text-[#536357] font-semibold mb-2 block">
-                  Fortnightly Executive Briefing
+                  {data?.eyebrow || 'Fortnightly Executive Briefing'}
                 </span>
                 <h1 className="text-4xl sm:text-5xl font-serif italic text-[#0D4049] tracking-tight mb-4">
-                  The Signal Letter
+                  {data?.title || 'The Signal Letter'}
                 </h1>
                 <p className="text-sm sm:text-base text-[#536357] font-sans leading-relaxed">
-                  No generic motivational tips. Just 1 field-tested positioning teardown and 2 framework adjustments every other Tuesday morning.
+                  {data?.subtitle || 'No generic motivational tips. Just 1 field-tested positioning teardown and 2 framework adjustments every other Tuesday morning.'}
                 </p>
               </div>
 
@@ -146,6 +150,14 @@ export const NewsletterPage: React.FC<NewsletterPageProps> = ({
           )}
         </div>
       </section>
+
+      {data?.sections && (
+        <SectionRenderer 
+          sections={data.sections} 
+          onOpenBooking={handleBooking} 
+          onNavigate={onNavigate} 
+        />
+      )}
     </div>
   );
 };

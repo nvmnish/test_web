@@ -3,9 +3,13 @@ import { PRICING_TIERS } from '../data/content';
 
 interface PricingProps {
   onSelectTier?: (tierId: string) => void;
+  tiers?: any[];
+  title?: string;
 }
 
-export const Pricing: React.FC<PricingProps> = ({ onSelectTier }) => {
+export const Pricing: React.FC<PricingProps> = ({ onSelectTier, tiers, title }) => {
+  const activeTiers = tiers && tiers.length > 0 ? tiers : PRICING_TIERS;
+
   const handleTierSelect = (tierId: string) => {
     if (onSelectTier) {
       onSelectTier(tierId);
@@ -19,13 +23,13 @@ export const Pricing: React.FC<PricingProps> = ({ onSelectTier }) => {
         {/* Section Heading */}
         <div className="text-center max-w-2xl mx-auto mb-16 sm:mb-24">
           <h2 className="text-5xl sm:text-6xl lg:text-[4.25rem] font-serif italic text-[#281B0C] tracking-tight">
-            Pricing
+            {title || 'Pricing'}
           </h2>
         </div>
 
         {/* Two Clean Tiers - both sharing warm background #FFF9F3 (dark green removed from second tier) */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-14 max-w-5xl mx-auto items-stretch">
-          {PRICING_TIERS.map((tier, index) => {
+          {activeTiers.map((tier, index) => {
             const isSecondTier = index === 1;
 
             return (
@@ -90,7 +94,7 @@ export const Pricing: React.FC<PricingProps> = ({ onSelectTier }) => {
 
                   {/* Feature List with arrow (→) */}
                   <div className="space-y-3 pt-1">
-                    {tier.features.map((feature, idx) => (
+                    {tier.features.map((feature: string, idx: number) => (
                       <div
                         key={idx}
                         className="flex items-start text-sm sm:text-[0.95rem] font-sans text-[#281B0C]"

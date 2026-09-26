@@ -2,16 +2,20 @@ import React, { useState } from 'react';
 import { Navbar, PageView } from './Navbar';
 import { ArrowRight, CheckCircle2, MessageSquare } from 'lucide-react';
 
+import { SectionRenderer } from './SectionRenderer';
+
 interface ContactPageProps {
   onNavigate?: (page: PageView) => void;
   onOpenBooking?: () => void;
   onSelectTier?: (tierId: string) => void;
+  data?: any;
 }
 
 export const ContactPage: React.FC<ContactPageProps> = ({
   onNavigate,
   onOpenBooking,
   onSelectTier,
+  data,
 }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -54,13 +58,13 @@ export const ContactPage: React.FC<ContactPageProps> = ({
         {/* Header */}
         <div className="max-w-2xl mb-12 sm:mb-16">
           <span className="text-xs uppercase tracking-widest text-[#24423C] font-semibold block mb-2">
-            Work With Me · Direct Executive Advisory
+            {data?.eyebrow || 'Work With Me · Direct Executive Advisory'}
           </span>
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif italic text-[#1F3B36] tracking-tight mb-4">
-            Start a Conversation
+            {data?.headline || 'Start a Conversation'}
           </h1>
           <p className="text-stone-600 text-base sm:text-lg leading-relaxed font-sans">
-            Whether you are evaluating the full Executive Content Engine, an Advisory Sprint, or simply need an objective sounding board on your category messaging, get in touch. Sheri personally reviews all executive inquiries within one business day.
+            {data?.subheadline || 'Whether you are evaluating the full Executive Content Engine, an Advisory Sprint, or simply need an objective sounding board on your category messaging, get in touch. Sheri personally reviews all executive inquiries within one business day.'}
           </p>
         </div>
 
@@ -302,6 +306,14 @@ export const ContactPage: React.FC<ContactPageProps> = ({
             </div>
           )}
       </main>
+
+      {data?.sections && (
+        <SectionRenderer 
+          sections={data.sections} 
+          onOpenBooking={onOpenBooking} 
+          onNavigate={onNavigate} 
+        />
+      )}
     </div>
   );
 };

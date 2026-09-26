@@ -2,12 +2,15 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { AboutPage } from '../components/AboutPage';
 import { Footer } from '../components/Footer';
+import { getAboutPageData } from '../lib/sanity/api';
+
+const aboutData = await getAboutPageData();
 ---
 
 <BaseLayout
-  title="About Sheri Otto & GLS. — Marketing Advisory"
-  description="Learn about Sheri Otto and the three GLS principles behind messaging that sounds like you."
+  title={aboutData.seo?.title || "About Sheri Otto & GLS. — Marketing Advisory"}
+  description={aboutData.seo?.description || "Learn about Sheri Otto and the three GLS principles behind messaging that sounds like you."}
 >
-  <AboutPage client:load />
+  <AboutPage client:load data={aboutData} />
   <Footer client:load />
 </BaseLayout>

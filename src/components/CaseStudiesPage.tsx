@@ -2,17 +2,21 @@ import React from 'react';
 import { Check, ArrowRight, Star } from 'lucide-react';
 import { Navbar, PageView } from './Navbar';
 
+import { SectionRenderer } from './SectionRenderer';
+
 interface CaseStudiesPageProps {
   onNavigate?: (page: PageView) => void;
   onOpenBooking?: () => void;
+  data?: any;
 }
 
 interface CaseStudy {
-  id: string;
+  id?: string;
+  _id?: string;
   client: string;
-  role: string;
+  role?: string;
   industry?: string;
-  timeframe: string;
+  timeframe?: string;
   headline?: string;
   statNumber?: string;
   statLabel?: string;
@@ -86,11 +90,14 @@ const CASE_STUDIES: CaseStudy[] = [
   },
 ];
 
-export const CaseStudiesPage: React.FC<CaseStudiesPageProps> = ({ onNavigate, onOpenBooking }) => {
+export const CaseStudiesPage: React.FC<CaseStudiesPageProps> = ({ onNavigate, onOpenBooking, data }) => {
   const handleBooking = () => {
     if (onOpenBooking) onOpenBooking();
     else window.dispatchEvent(new CustomEvent('open-booking-modal'));
   };
+
+  const activeStudies: CaseStudy[] = data?.studies && data.studies.length > 0 ? data.studies : CASE_STUDIES;
+
   return (
     <div className="min-h-screen bg-[#FFF9F3] text-[#1E2E2A] font-sans antialiased flex flex-col">
       {/* Universal Transparent Navbar */}
@@ -103,21 +110,21 @@ export const CaseStudiesPage: React.FC<CaseStudiesPageProps> = ({ onNavigate, on
       {/* Hero */}
       <section className="py-12 sm:py-20 max-w-5xl mx-auto px-6 sm:px-10 text-center">
         <span className="text-xs uppercase tracking-widest text-[#536357] font-semibold mb-3 block">
-          Client Proof &amp; Case Studies
+          {data?.eyebrow || 'Client Proof & Case Studies'}
         </span>
         <h1 className="text-5xl sm:text-6xl lg:text-7xl font-serif italic text-[#0D4049] tracking-tight">
-          What happens when expertise gets seen
+          {data?.headline || 'What happens when expertise gets seen'}
         </h1>
         <p className="mt-5 text-base sm:text-lg text-[#536357] font-sans max-w-2xl mx-auto leading-relaxed">
-          Real numbers from founders, builders, and marketing leaders who stopped hiding behind delivery and let their perspective compound in public.
+          {data?.description || 'Real numbers from founders, builders, and marketing leaders who stopped hiding behind delivery and let their perspective compound in public.'}
         </p>
       </section>
 
       {/* Case Studies Deep Dive List */}
       <section className="max-w-6xl mx-auto px-6 sm:px-10 pb-24 space-y-16 flex-1">
-        {CASE_STUDIES.map((study, index) => (
+        {activeStudies.map((study, index) => (
           <div
-            key={study.id}
+            key={study.id || study._id || index}
             className="bg-[#FFFDF9] rounded-[2.25rem] p-8 sm:p-12 lg:p-14 shadow-sm"
           >
             {/* Top Row: Meta Header (Industry tag and metric box removed) */}
@@ -216,6 +223,13 @@ export const CaseStudiesPage: React.FC<CaseStudiesPageProps> = ({ onNavigate, on
           </div>
         ))}
       </section>
+
+      {/* Dynamic Sections from Page Builder */}
+      {data?.sections && (
+        <div className="pb-16">
+          <SectionRenderer sections={data.sections} onOpenBooking={handleBooking} />
+        </div>
+      )}
     </div>
   );
 };

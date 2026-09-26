@@ -5,6 +5,8 @@ import { CasinoSpinNumber } from './CasinoCounter';
 import bg from '../assets/images/bg.png';
 import pointing_wide_1 from '../assets/images/pointing_wide 1.png';
 
+import { urlForImage } from '../lib/sanity/image';
+
 const resolveImageSrc = (img: unknown, fallback: string): string => {
   if (typeof img === 'string' && img.length > 0) return img;
   if (img && typeof img === 'object' && 'src' in img && typeof (img as { src: unknown }).src === 'string') {
@@ -16,13 +18,28 @@ const resolveImageSrc = (img: unknown, fallback: string): string => {
 const bgSrc = resolveImageSrc(bg, '/assets/images/bg.png');
 const pointingWideSrc = resolveImageSrc(pointing_wide_1, '/assets/images/pointing_wide.png');
 
+export interface HeroData {
+  headline?: string;
+  subheadline?: string;
+  primaryCta?: string;
+  secondaryCta?: string;
+  heroImage?: any;
+  heroBackgroundImage?: any;
+}
+
 interface HeroProps {
   onOpenBooking?: () => void;
   onOpenHeavyModal?: () => void;
   onNavigate?: (page: PageView) => void;
+  data?: HeroData;
 }
 
-export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenHeavyModal, onNavigate }) => {
+export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenHeavyModal, onNavigate, data }) => {
+  const customBg = data?.heroBackgroundImage ? urlForImage(data.heroBackgroundImage) : null;
+  const customHeroImg = data?.heroImage ? urlForImage(data.heroImage) : null;
+
+  const activeBg = customBg || bgSrc;
+  const activeHeroImg = customHeroImg || pointingWideSrc;
   const handleBooking = () => {
     if (onOpenBooking) onOpenBooking();
     else window.dispatchEvent(new CustomEvent('open-booking-modal'));
@@ -40,7 +57,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenHeavyModal, onN
         <div className="absolute inset-0 pointer-events-none select-none z-0 overflow-hidden bg-[#BDC67A]">
           {/* Background Image: Standard full presentation */}
           <img
-            src={bgSrc}
+            src={activeBg}
             alt="Hero background"
             referrerPolicy="no-referrer"
             className="w-full h-full object-fill object-center"
@@ -68,14 +85,24 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenHeavyModal, onN
             
             {/* Left Column: Hero Text in Figtree Medium, Value Proposition & Actions */}
             <div className="lg:col-span-7 flex flex-col items-start order-1 lg:order-1 pr-0 lg:pr-6 xl:pr-10">
-              <h1 className="text-4xl sm:text-5xl lg:text-[3.65rem] xl:text-[3.85rem] leading-[1.14] tracking-tight text-white font-sans font-medium">
-                Marketing for people <br />
-                too busy <span className="italic font-serif font-normal">doing the work</span> <br />
-                to talk about it
-              </h1>
+              {data?.headline ? (
+                <h1 className="text-4xl sm:text-5xl lg:text-[3.65rem] xl:text-[3.85rem] leading-[1.14] tracking-tight text-white font-sans font-medium whitespace-pre-line">
+                  {data.headline}
+                </h1>
+              ) : (
+                <h1 className="text-4xl sm:text-5xl lg:text-[3.65rem] xl:text-[3.85rem] leading-[1.14] tracking-tight text-white font-sans font-medium">
+                  Marketing for people <br />
+                  too busy <span className="italic font-serif font-normal">doing the work</span> <br />
+                  to talk about it
+                </h1>
+              )}
 
               <p className="mt-6 sm:mt-7 text-[#F5F8ED] text-base sm:text-[1.05rem] leading-relaxed max-w-xl font-sans font-normal opacity-95">
-                I am Sheri Otto. I run content and messaging for founders, operators, and in-house teams. Either I do it for you, or I teach you to run it yourself. You talk. The rest gets handled.
+                {data?.subheadline || (
+                  <>
+                    I am Sheri Otto. I run content and messaging for founders, operators, and in-house teams. Either I do it for you, or I teach you to run it yourself. You talk. The rest gets handled.
+                  </>
+                )}
               </p>
 
               {/* CTA Actions with subtle rounded corners */}
@@ -85,14 +112,14 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenHeavyModal, onN
                   className="bg-[#24423C] hover:bg-[#1A342E] text-white px-7 py-3.5 rounded-[4px] font-medium text-sm sm:text-base tracking-normal transition-all duration-200 shadow-sm text-center cursor-pointer active:scale-[0.99] relative z-20"
                   id="hero-book-gap-check"
                 >
-                  Book a 20-minute gap check
+                  {data?.primaryCta || 'Book a 20-minute gap check'}
                 </button>
                 <button
                   onClick={handleHeavy}
                   className="bg-white hover:bg-stone-50 text-[#24423C] px-7 py-3.5 rounded-[4px] font-medium text-sm sm:text-base tracking-normal transition-all duration-200 shadow-sm border border-white/60 text-center cursor-pointer active:scale-[0.99] relative z-20"
                   id="hero-tell-heavy"
                 >
-                  Or tell me what feels heavy
+                  {data?.secondaryCta || 'Or tell me what feels heavy'}
                 </button>
               </div>
             </div>
@@ -109,7 +136,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenHeavyModal, onN
                 {/* Foreground Photo Card: Square aspect ratio (1:1), all corners rounded */}
                 <div className="relative z-10 w-full aspect-square rounded-[2.5rem] sm:rounded-[3.25rem] overflow-hidden bg-[#A9D6D4] shadow-md">
                   <img
-                    src={pointingWideSrc}
+                    src={activeHeroImg}
                     alt="Sheri Otto presenting"
                     referrerPolicy="no-referrer"
                     className="w-full h-full object-cover object-[32%_center]"

@@ -25,12 +25,55 @@ import { FreeToolsPage } from './components/FreeToolsPage';
 import { NewsletterPage } from './components/NewsletterPage';
 import { BookingPage } from './components/BookingPage';
 import { ContactPage } from './components/ContactPage';
+import { SectionRenderer } from './components/SectionRenderer';
+import {
+  getHomePageData,
+  getAboutPageData,
+  getCaseStudiesPageData,
+  getFreeToolsPageData,
+  getBlogPageData,
+  getNewsletterPageData,
+  getContactPageData,
+} from './lib/sanity/api';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState<PageView>('home');
   const [selectedPricingTier, setSelectedPricingTier] = useState<string | null>(null);
   const [heavyModalOpen, setHeavyModalOpen] = useState(false);
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
+
+  // Dynamic Sanity CMS state
+  const [cmsData, setCmsData] = useState<{
+    home?: any;
+    about?: any;
+    caseStudies?: any;
+    freeTools?: any;
+    blog?: any;
+    newsletter?: any;
+    contact?: any;
+  }>({});
+
+  useEffect(() => {
+    // Load home data initially
+    getHomePageData().then((home) => setCmsData((prev) => ({ ...prev, home })));
+  }, []);
+
+  // Fetch page-specific data as user navigates
+  useEffect(() => {
+    if (currentPage === 'about' && !cmsData.about) {
+      getAboutPageData().then((about) => setCmsData((prev) => ({ ...prev, about })));
+    } else if (currentPage === 'case-studies' && !cmsData.caseStudies) {
+      getCaseStudiesPageData().then((caseStudies) => setCmsData((prev) => ({ ...prev, caseStudies })));
+    } else if (currentPage === 'free-tools' && !cmsData.freeTools) {
+      getFreeToolsPageData().then((freeTools) => setCmsData((prev) => ({ ...prev, freeTools })));
+    } else if (currentPage === 'blog' && !cmsData.blog) {
+      getBlogPageData().then((blog) => setCmsData((prev) => ({ ...prev, blog })));
+    } else if (currentPage === 'newsletter' && !cmsData.newsletter) {
+      getNewsletterPageData().then((newsletter) => setCmsData((prev) => ({ ...prev, newsletter })));
+    } else if (currentPage === 'contact' && !cmsData.contact) {
+      getContactPageData().then((contact) => setCmsData((prev) => ({ ...prev, contact })));
+    }
+  }, [currentPage, cmsData]);
 
   const handleNavigate = (page: PageView) => {
     if (page === 'pricing') {
@@ -86,6 +129,7 @@ export default function App() {
         <BlogPage
           onNavigate={handleNavigate}
           onOpenBooking={() => handleOpenBooking()}
+          data={cmsData.blog}
         />
       )}
 
@@ -93,6 +137,7 @@ export default function App() {
         <CaseStudiesPage
           onNavigate={handleNavigate}
           onOpenBooking={() => handleOpenBooking()}
+          data={cmsData.caseStudies}
         />
       )}
 
@@ -100,6 +145,7 @@ export default function App() {
         <AboutPage
           onNavigate={handleNavigate}
           onOpenBooking={() => handleOpenBooking()}
+          data={cmsData.about}
         />
       )}
 
@@ -108,6 +154,7 @@ export default function App() {
           onNavigate={handleNavigate}
           onOpenBooking={() => handleOpenBooking()}
           onOpenHeavyAuditModal={() => setHeavyModalOpen(true)}
+          data={cmsData.freeTools}
         />
       )}
 
@@ -116,6 +163,7 @@ export default function App() {
           <NewsletterPage
             onNavigate={handleNavigate}
             onOpenBooking={() => handleOpenBooking()}
+            data={cmsData.newsletter}
           />
           <Footer
             onOpenBooking={() => handleOpenBooking()}
@@ -139,6 +187,7 @@ export default function App() {
             onNavigate={handleNavigate}
             onOpenBooking={() => handleOpenBooking()}
             onSelectTier={handleSelectPricingTier}
+            data={cmsData.contact}
           />
           <Footer
             onOpenBooking={() => handleOpenBooking()}
@@ -155,33 +204,46 @@ export default function App() {
             onOpenBooking={() => handleOpenBooking()}
             onOpenHeavyModal={() => setHeavyModalOpen(true)}
             onNavigate={handleNavigate}
+            data={cmsData.home?.hero}
           />
 
-          {/* Main Content Sections */}
+          {/* Main Content Sections: Dynamic Sanity Page Builder or Default Sections */}
           <main>
-            {/* Who We Serve: Marketing Teams & Founders and Owners - Redirects 'See how it works' to case studies */}
-            <WhoWeServe onRedirectToCaseStudies={() => handleNavigate('case-studies')} />
+            {cmsData.home?.sections && cmsData.home.sections.length > 0 ? (
+              <SectionRenderer
+                sections={cmsData.home.sections}
+                onOpenBooking={() => handleOpenBooking()}
+                onOpenHeavyModal={() => setHeavyModalOpen(true)}
+                onNavigate={handleNavigate}
+                onSelectTier={handleSelectPricingTier}
+              />
+            ) : (
+              <>
+                {/* Who We Serve: Marketing Teams & Founders and Owners */}
+                <WhoWeServe onRedirectToCaseStudies={() => handleNavigate('case-studies')} />
 
-            {/* Client Stories: Alternating proof quotes and mint cards */}
-            <ClientStories onOpenBooking={() => handleOpenBooking()} />
+                {/* Client Stories: Alternating proof quotes and mint cards */}
+                <ClientStories onOpenBooking={() => handleOpenBooking()} />
 
-            {/* Don't take our word for it: Short form video placeholder carousel on autoplay but muted */}
-            <VideoCarousel />
+                {/* Don't take our word for it: Short form video placeholder carousel */}
+                <VideoCarousel />
 
-            {/* Pricing: Two tiers, clean, ample white space - selecting redirects to dedicated booking page */}
-            <Pricing onSelectTier={handleSelectPricingTier} />
+                {/* Pricing: Two tiers, clean, ample white space */}
+                <Pricing onSelectTier={handleSelectPricingTier} />
 
-            {/* Who we aren't: Data visualization / comparison us vs them table */}
-            <ComparisonTable />
+                {/* Who we aren't: Data visualization / comparison us vs them table */}
+                <ComparisonTable />
 
-            {/* FAQ: Populated expandable accordion questions */}
-            <FAQSection onOpenBooking={() => handleOpenBooking()} />
+                {/* FAQ: Populated expandable accordion questions */}
+                <FAQSection onOpenBooking={() => handleOpenBooking()} />
 
-            {/* Closing section */}
-            <ClosingCta
-              onOpenBooking={() => handleOpenBooking()}
-              onOpenHeavyModal={() => setHeavyModalOpen(true)}
-            />
+                {/* Closing section */}
+                <ClosingCta
+                  onOpenBooking={() => handleOpenBooking()}
+                  onOpenHeavyModal={() => setHeavyModalOpen(true)}
+                />
+              </>
+            )}
           </main>
 
           {/* Footer */}

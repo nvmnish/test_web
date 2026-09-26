@@ -2,20 +2,26 @@ import React, { useState } from 'react';
 import { Download, CheckCircle2, FileText, ArrowRight } from 'lucide-react';
 import { Navbar, PageView } from './Navbar';
 
+import { SectionRenderer } from './SectionRenderer';
+
 interface FreeToolsPageProps {
   onNavigate?: (page: PageView) => void;
   onOpenBooking?: () => void;
   onOpenHeavyAuditModal?: () => void;
+  data?: any;
 }
 
 interface ToolItem {
   id: string;
+  _id?: string;
   title: string;
   category: string;
   description: string;
   deliverable: string;
   ctaText: string;
   type: 'audit' | 'download';
+  downloadFileUrl?: string;
+  externalUrl?: string;
 }
 
 const TOOLS: ToolItem[] = [
@@ -61,6 +67,7 @@ export const FreeToolsPage: React.FC<FreeToolsPageProps> = ({
   onNavigate,
   onOpenBooking,
   onOpenHeavyAuditModal,
+  data,
 }) => {
   const [downloadSuccess, setDownloadSuccess] = useState<string | null>(null);
 
@@ -68,6 +75,8 @@ export const FreeToolsPage: React.FC<FreeToolsPageProps> = ({
     if (onOpenBooking) onOpenBooking();
     else window.dispatchEvent(new CustomEvent('open-booking-modal'));
   };
+
+  const activeTools: ToolItem[] = data?.tools && data.tools.length > 0 ? data.tools : TOOLS;
 
   const handleToolClick = (tool: ToolItem) => {
     if (tool.type === 'audit') {
@@ -77,7 +86,15 @@ export const FreeToolsPage: React.FC<FreeToolsPageProps> = ({
         window.dispatchEvent(new CustomEvent('open-heavy-modal'));
       }
     } else {
-      setDownloadSuccess(tool.id);
+      if (tool.externalUrl) {
+        window.open(tool.externalUrl, '_blank');
+        return;
+      }
+      if (tool.downloadFileUrl) {
+        window.open(tool.downloadFileUrl, '_blank');
+        return;
+      }
+      setDownloadSuccess(tool.id || tool._id || 'download');
       setTimeout(() => setDownloadSuccess(null), 4000);
     }
   };
@@ -94,34 +111,38 @@ export const FreeToolsPage: React.FC<FreeToolsPageProps> = ({
       {/* Hero */}
       <section className="py-12 sm:py-20 max-w-5xl mx-auto px-6 sm:px-10 text-center">
         <span className="text-xs uppercase tracking-widest text-[#536357] font-semibold mb-3 block">
-          Open Resources &amp; Diagnostic Kits
+          {data?.eyebrow || 'Open Resources & Diagnostic Kits'}
         </span>
         <h1 className="text-5xl sm:text-6xl lg:text-7xl font-serif italic text-[#0D4049] tracking-tight">
-          Executive tools, free to run
+          {data?.headline || 'Executive tools, free to run'}
         </h1>
         <p className="mt-5 text-base sm:text-lg text-[#536357] font-sans max-w-xl mx-auto leading-relaxed">
-          Zero email gating on our core frameworks. Use our internal diagnostics, interview cheatsheets, and position matrices.
+          {data?.description || 'Zero email gating on our core frameworks. Use our internal diagnostics, interview cheatsheets, and position matrices.'}
         </p>
       </section>
 
       {/* Tools Grid */}
       <section className="max-w-6xl mx-auto px-6 sm:px-10 pb-24 flex-1">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {TOOLS.map((tool) => {
+          {activeTools.map((tool) => {
             const getBadgeClass = (category: string) => {
               switch (category) {
                 case 'Diagnostic Matrix':
+                case 'Diagnostic Assessment':
                   return 'bg-[#A9D6D4]/40 text-[#0D4049]';
                 case 'Audio Extract':
+                case 'Framework & Prompts':
                   return 'bg-[#BDC67A]/35 text-[#0D4049]';
                 default:
                   return 'bg-[#536357]/20 text-[#536357]';
               }
             };
 
+            const toolKey = tool.id || tool._id || tool.title;
+
             return (
               <div
-                key={tool.id}
+                key={toolKey}
                 className="bg-[#FFFDF9] rounded-[2rem] p-8 sm:p-10 flex flex-col justify-between shadow-none hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
               >
                 <div>
@@ -148,7 +169,7 @@ export const FreeToolsPage: React.FC<FreeToolsPageProps> = ({
                 </div>
 
                 <div>
-                  {downloadSuccess === tool.id ? (
+                  {downloadSuccess === toolKey ? (
                     <div className="bg-[#A9D6D4]/30 text-[#0D4049] font-semibold text-sm py-3 px-6 rounded-full flex items-center justify-center gap-2">
                       <CheckCircle2 className="w-4 h-4" />
                       <span>Download started successfully!</span>
@@ -168,6 +189,13 @@ export const FreeToolsPage: React.FC<FreeToolsPageProps> = ({
           })}
         </div>
       </section>
+
+      {/* Dynamic Sections from Page Builder */}
+      {data?.sections && (
+        <div className="pb-16">
+          <SectionRenderer sections={data.sections} onOpenBooking={handleBooking} />
+        </div>
+      )}
     </div>
   );
 };

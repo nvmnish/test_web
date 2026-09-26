@@ -2,14 +2,17 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { NewsletterPage } from '../components/NewsletterPage';
 import { Footer } from '../components/Footer';
+import { getNewsletterPageData } from '../lib/sanity/api';
+
+const newsletterData = await getNewsletterPageData();
 ---
 
 <BaseLayout
-  title="The Signal Letter — Fortnightly Executive Briefing by GLS."
-  description="No generic motivational tips. Just 1 field-tested positioning teardown and 2 framework adjustments every other Tuesday morning."
+  title={newsletterData.seo?.title || "The Signal Letter — Fortnightly Executive Briefing by GLS."}
+  description={newsletterData.seo?.description || "No generic motivational tips. Just 1 field-tested positioning teardown and 2 framework adjustments every other Tuesday morning."}
   bodyClass="bg-[#FFF9F3]/60 text-[#1E2E2A] font-sans antialiased selection:bg-[#B8C87A]/40 selection:text-[#162A26] min-h-screen"
 >
   <!-- Interactive Form Island: Receives user input for role, name, email -->
-  <NewsletterPage client:load />
+  <NewsletterPage client:load data={newsletterData} />
   <Footer client:load bgColor="bg-[#FFF9F3]/60" />
 </BaseLayout>
