@@ -59,22 +59,24 @@ export default function App() {
     getHomePageData().then((home) => setCmsData((prev) => ({ ...prev, home })));
   }, []);
 
-  // Fetch page-specific data as user navigates
+  // Fetch fresh page-specific data from Sanity whenever user navigates
   useEffect(() => {
-    if (currentPage === 'about' && !cmsData.about) {
+    if (currentPage === 'about') {
       getAboutPageData().then((about) => setCmsData((prev) => ({ ...prev, about })));
-    } else if (currentPage === 'case-studies' && !cmsData.caseStudies) {
+    } else if (currentPage === 'case-studies') {
       getCaseStudiesPageData().then((caseStudies) => setCmsData((prev) => ({ ...prev, caseStudies })));
-    } else if (currentPage === 'free-tools' && !cmsData.freeTools) {
+    } else if (currentPage === 'free-tools') {
       getFreeToolsPageData().then((freeTools) => setCmsData((prev) => ({ ...prev, freeTools })));
-    } else if (currentPage === 'blog' && !cmsData.blog) {
+    } else if (currentPage === 'blog') {
       getBlogPageData().then((blog) => setCmsData((prev) => ({ ...prev, blog })));
-    } else if (currentPage === 'newsletter' && !cmsData.newsletter) {
+    } else if (currentPage === 'newsletter') {
       getNewsletterPageData().then((newsletter) => setCmsData((prev) => ({ ...prev, newsletter })));
-    } else if (currentPage === 'contact' && !cmsData.contact) {
+    } else if (currentPage === 'contact') {
       getContactPageData().then((contact) => setCmsData((prev) => ({ ...prev, contact })));
+    } else if (currentPage === 'home') {
+      getHomePageData().then((home) => setCmsData((prev) => ({ ...prev, home })));
     }
-  }, [currentPage, cmsData]);
+  }, [currentPage]);
 
   const handleNavigate = (page: PageView) => {
     if (page === 'pricing') {
@@ -205,7 +207,10 @@ export default function App() {
             onOpenBooking={() => handleOpenBooking()}
             onOpenHeavyModal={() => setHeavyModalOpen(true)}
             onNavigate={handleNavigate}
-            data={cmsData.home?.hero}
+            data={{
+              ...cmsData.home?.hero,
+              metrics: cmsData.home?.metrics,
+            }}
           />
 
           {/* Main Content Sections: Dynamic Sanity Page Builder or Default Sections */}
@@ -221,27 +226,42 @@ export default function App() {
             ) : (
               <>
                 {/* Who We Serve: Marketing Teams & Founders and Owners */}
-                <WhoWeServe onRedirectToCaseStudies={() => handleNavigate('case-studies')} />
+                <WhoWeServe
+                  data={cmsData.home?.whoWeServe}
+                  onRedirectToCaseStudies={() => handleNavigate('case-studies')}
+                />
 
                 {/* Client Stories: Alternating proof quotes and mint cards */}
-                <ClientStories onOpenBooking={() => handleOpenBooking()} />
+                <ClientStories
+                  onOpenBooking={() => handleOpenBooking()}
+                  onRedirectToCaseStudies={() => handleNavigate('case-studies')}
+                  onNavigate={handleNavigate}
+                  data={cmsData.home?.clientQuotes || cmsData.home}
+                />
 
                 {/* Don't take our word for it: Short form video placeholder carousel */}
-                <VideoCarousel />
+                <VideoCarousel data={cmsData.home?.videoTestimonials} />
 
                 {/* Who we aren't: Data visualization / comparison us vs them table (Position 5) */}
-                <ComparisonTable />
+                <ComparisonTable data={cmsData.home?.comparison} />
 
                 {/* Pricing: Two tiers, clean, ample white space (Position 6) */}
-                <Pricing onSelectTier={handleSelectPricingTier} />
+                <Pricing
+                  tiers={cmsData.home?.pricingTiers}
+                  onSelectTier={handleSelectPricingTier}
+                />
 
                 {/* FAQ: Populated expandable accordion questions */}
-                <FAQSection onOpenBooking={() => handleOpenBooking()} />
+                <FAQSection
+                  items={cmsData.home?.faqs}
+                  onOpenBooking={() => handleOpenBooking()}
+                />
 
                 {/* Closing section */}
                 <ClosingCta
                   onOpenBooking={() => handleOpenBooking()}
                   onOpenHeavyModal={() => setHeavyModalOpen(true)}
+                  data={cmsData.home?.closingCta}
                 />
               </>
             )}

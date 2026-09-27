@@ -4,9 +4,20 @@ import { FAQ_ITEMS } from '../data/content';
 
 interface FAQSectionProps {
   onOpenBooking?: () => void;
+  items?: any[];
+  data?: any;
+  title?: string;
 }
 
-export const FAQSection: React.FC<FAQSectionProps> = ({ onOpenBooking }) => {
+export const FAQSection: React.FC<FAQSectionProps> = ({ onOpenBooking, items, data, title }) => {
+  const activeItems = (items && items.length > 0)
+    ? items
+    : (data?.items && data.items.length > 0)
+      ? data.items
+      : (data?.faqs && data.faqs.length > 0)
+        ? data.faqs
+        : FAQ_ITEMS;
+
   const [openIds, setOpenIds] = useState<string[]>(['faq-1']); // First one open by default
 
   const toggleFaq = (id: string) => {
@@ -24,28 +35,31 @@ export const FAQSection: React.FC<FAQSectionProps> = ({ onOpenBooking }) => {
     }
   };
 
+  const sectionHeading = title || data?.title || data?.heading || 'FAQ';
+
   return (
     <section className="py-14 sm:py-20 bg-[#FFF9F3]" id="faq">
       <div className="max-w-4xl mx-auto px-6 sm:px-10 lg:px-12">
         {/* Section Heading - Enlarged with 281B0C */}
         <div className="text-center mb-10 sm:mb-14">
           <h2 className="text-5xl sm:text-6xl lg:text-[4.25rem] font-serif italic text-[#281B0C] tracking-tight">
-            FAQ
+            {sectionHeading}
           </h2>
         </div>
 
         {/* Accordion List with pure plus/minus icon (no circle) and Figtree typography in #281B0C */}
         <div className="divide-y divide-[#281B0C]/15 border-t border-b border-[#281B0C]/15">
-          {FAQ_ITEMS.map((item) => {
-            const isOpen = openIds.includes(item.id);
+          {activeItems.map((item: any, idx: number) => {
+            const itemId = item.id || item._id || item._key || `faq-${idx}`;
+            const isOpen = openIds.includes(itemId);
             return (
-              <div key={item.id} className="py-6 sm:py-7 transition-colors">
+              <div key={itemId} className="py-6 sm:py-7 transition-colors">
                 <button
                   type="button"
-                  onClick={() => toggleFaq(item.id)}
+                  onClick={() => toggleFaq(itemId)}
                   className="w-full flex items-center justify-between text-left group cursor-pointer focus:outline-none"
                   aria-expanded={isOpen}
-                  id={`faq-btn-${item.id}`}
+                  id={`faq-btn-${itemId}`}
                 >
                   <span className="text-lg sm:text-xl font-sans font-medium text-[#281B0C] group-hover:text-[#281B0C]/80 transition-colors pr-6 leading-snug">
                     {item.question}

@@ -7,21 +7,36 @@ import {
 } from 'lucide-react';
 import { VIDEO_TESTIMONIALS } from '../data/content';
 
-export const VideoCarousel: React.FC = () => {
+interface VideoCarouselProps {
+  data?: any;
+}
+
+export const VideoCarousel: React.FC<VideoCarouselProps> = ({ data }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isMuted, setIsMuted] = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  const total = VIDEO_TESTIMONIALS.length;
+  const rawVideos = data?.videos || data?.testimonials || VIDEO_TESTIMONIALS;
+  const activeVideos = Array.isArray(rawVideos) && rawVideos.length > 0 ? rawVideos.map((v: any, i: number) => ({
+    id: v.id || v._key || `video-${i}`,
+    clientName: v.clientName || v.client || `Client ${i + 1}`,
+    videoSrc: v.videoSrc || v.videoUrl || (VIDEO_TESTIMONIALS[i % VIDEO_TESTIMONIALS.length]?.videoSrc),
+    poster: v.posterUrl || v.poster || (v.videoPoster?.asset?.url) || (VIDEO_TESTIMONIALS[i % VIDEO_TESTIMONIALS.length]?.poster) || '/images/Sandra.png',
+  })) : VIDEO_TESTIMONIALS;
+
+  const total = activeVideos.length;
 
   if (total === 0) return null;
 
   const activeIndex = currentIndex % total;
-  const currentItem = VIDEO_TESTIMONIALS[activeIndex]!;
+  const currentItem = activeVideos[activeIndex]!;
   const prevItem =
-    VIDEO_TESTIMONIALS[(activeIndex - 1 + total) % total]!;
+    activeVideos[(activeIndex - 1 + total) % total]!;
   const nextItem =
-    VIDEO_TESTIMONIALS[(activeIndex + 1) % total]!;
+    activeVideos[(activeIndex + 1) % total]!;
+
+  const heading = data?.heading || data?.title || "Don't take our word for it.";
+  const subheading = data?.subheading || data?.subtitle || "Hear it from the people who trusted us.";
 
   const selectVideo = (index: number) => {
     if (index === activeIndex) return;
@@ -78,12 +93,14 @@ export const VideoCarousel: React.FC = () => {
       <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-12">
         <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-16">
           <h2 className="text-5xl sm:text-6xl lg:text-[4.25rem] font-serif italic text-[#281B0C] tracking-tight">
-            Don&apos;t take our word for it.
+            {heading}
           </h2>
 
-          <p className="mt-4 text-base sm:text-lg text-stone-600">
-            Hear it from the people who trusted us.
-          </p>
+          {subheading && (
+            <p className="mt-4 text-base sm:text-lg text-stone-600">
+              {subheading}
+            </p>
+          )}
         </div>
 
         <div className="relative max-w-5xl mx-auto">

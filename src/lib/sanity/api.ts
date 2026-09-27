@@ -1,4 +1,5 @@
 import { sanityClient } from './client';
+import { urlForImage } from './image';
 import {
   homePageQuery,
   aboutPageQuery,
@@ -51,43 +52,110 @@ export async function getHomePageData() {
       'Content and messaging advisory for founders, operators, and in-house teams by Sheri Otto.',
   };
 
-  const sanityHome = await safeFetch(homePageQuery, null);
+  const rawHomeDocs = await safeFetch(homePageQuery, null);
+  const homeDocsList: any[] = Array.isArray(rawHomeDocs)
+    ? rawHomeDocs
+    : rawHomeDocs
+      ? [rawHomeDocs]
+      : [];
+  
+  // Primary home document (prefer explicitly edited homePage, fallback to page-home)
+  const primaryHome = homeDocsList.find((d: any) => d._id === 'homePage') || homeDocsList[0] || null;
+  const seededHome = homeDocsList.find((d: any) => d._id === 'page-home') || homeDocsList[0] || null;
+
+  // Also query case studies to fetch client photos for Shelia and Roslyn
+  const caseStudyPhotosQuery = `*[_type == "caseStudy" && client in ["Shelia", "Roslyn"]]{
+    client,
+    clientPhoto{ ..., asset-> },
+    "clientPhotoUrl": clientPhoto.asset->url
+  }`;
+  const caseStudyPhotos = await safeFetch(caseStudyPhotosQuery, []);
+  const sheliaCasePhoto = Array.isArray(caseStudyPhotos)
+    ? caseStudyPhotos.find((c: any) => c.client?.toLowerCase() === 'shelia')?.clientPhotoUrl
+    : null;
+  const roslynCasePhoto = Array.isArray(caseStudyPhotos)
+    ? caseStudyPhotos.find((c: any) => c.client?.toLowerCase() === 'roslyn')?.clientPhotoUrl
+    : null;
+
+  // Active client quotes configuration
+  const clientQuotes = {
+    quote1: {
+      clientName: primaryHome?.quote1ClientName || seededHome?.quote1ClientName || 'Shelia',
+      quote: primaryHome?.quote1Quote || seededHome?.quote1Quote || '“We’ve gone from zero postings. I never post.”',
+      timeframe: primaryHome?.quote1Timeframe || seededHome?.quote1Timeframe || 'Three months into working together',
+      paragraph: primaryHome?.quote1Paragraph || seededHome?.quote1Paragraph || 'She told me no for two months. Too busy, too nervous, not her thing. We started in June anyway. By September, a distant contact\'s barber saw her content, which immediately led to a dentist contracting her for three commercial projects and a custom home build.',
+      photoUrl: primaryHome?.quote1PhotoUrl || seededHome?.quote1PhotoUrl || sheliaCasePhoto || 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=900&q=80',
+      tag: primaryHome?.quote1Tag || seededHome?.quote1Tag || 'Commercial Architecture & Building',
+      ctaText: primaryHome?.quote1CtaText || seededHome?.quote1CtaText || 'See how content can compound for you',
+    },
+    quote2: {
+      clientName: primaryHome?.quote2ClientName || seededHome?.quote2ClientName || 'Roslyn',
+      quote: primaryHome?.quote2Quote || seededHome?.quote2Quote || '“I had no idea. I’m so excited.”',
+      timeframe: primaryHome?.quote2Timeframe || seededHome?.quote2Timeframe || 'Hearing her enrollment number out loud',
+      paragraph: primaryHome?.quote2Paragraph || seededHome?.quote2Paragraph || 'Her Harrisburg campus had room for 125 children and sat at 28% full. We started in March. By June 30 it was at 56%, and she had never run marketing of any kind before that. She found out on a call with me, because I stopped and asked her for the number.',
+      photoUrl: primaryHome?.quote2PhotoUrl || seededHome?.quote2PhotoUrl || roslynCasePhoto || 'https://images.unsplash.com/photo-1580894732444-8ecded7900cd?auto=format&fit=crop&w=900&q=80',
+      tag: primaryHome?.quote2Tag || seededHome?.quote2Tag || 'Campus Enrollment & Growth',
+      ctaText: primaryHome?.quote2CtaText || seededHome?.quote2CtaText || 'See what this could look like for you',
+    },
+  };
+
   const faqs = await safeFetch(allFaqsQuery, FAQ_ITEMS);
   const pricingTiers = await safeFetch(allPricingTiersQuery, PRICING_TIERS);
   const clientStories = await safeFetch(allClientStoriesQuery, null);
 
+  const rawSections = (primaryHome?.sections && primaryHome.sections.length > 0)
+    ? primaryHome.sections
+    : (seededHome?.sections && seededHome.sections.length > 0)
+      ? seededHome.sections
+      : null;
+
   return {
     hero: {
-      headline: sanityHome?.heroHeadline || defaultHome.heroHeadline,
-      subheadline: sanityHome?.heroSubheadline || defaultHome.heroSubheadline,
-      primaryCta: sanityHome?.heroPrimaryCta || defaultHome.heroPrimaryCta,
-      secondaryCta: sanityHome?.heroSecondaryCta || defaultHome.heroSecondaryCta,
-      heroImage: sanityHome?.heroImage || null,
-      heroBackgroundImage: sanityHome?.heroBackgroundImage || null,
+      headline: primaryHome?.heroHeadline || seededHome?.heroHeadline || defaultHome.heroHeadline,
+      subheadline: primaryHome?.heroSubheadline || seededHome?.heroSubheadline || defaultHome.heroSubheadline,
+      primaryCta: primaryHome?.heroPrimaryCta || seededHome?.heroPrimaryCta || defaultHome.heroPrimaryCta,
+      secondaryCta: primaryHome?.heroSecondaryCta || seededHome?.heroSecondaryCta || defaultHome.heroSecondaryCta,
+      heroImage: primaryHome?.heroImage || seededHome?.heroImage || null,
+      heroBackgroundImage: primaryHome?.heroBackgroundImage || seededHome?.heroBackgroundImage || null,
     },
+    clientQuotes,
     sections: (() => {
-      const rawSections = sanityHome?.sections || null;
       if (Array.isArray(rawSections)) {
-        const compIdx = rawSections.findIndex((s: any) => s._type === 'comparisonSection');
-        const priceIdx = rawSections.findIndex((s: any) => s._type === 'pricingSection');
+        // Attach quotesData to clientStoriesSection so it has both custom and defaults
+        const enriched = rawSections.map((s: any) => {
+          if (s._type === 'clientStoriesSection') {
+            return {
+              ...s,
+              ...clientQuotes,
+            };
+          }
+          return s;
+        });
+
+        const compIdx = enriched.findIndex((s: any) => s._type === 'comparisonSection');
+        const priceIdx = enriched.findIndex((s: any) => s._type === 'pricingSection');
         if (compIdx !== -1 && priceIdx !== -1 && priceIdx < compIdx) {
-          const ordered = [...rawSections];
+          const ordered = [...enriched];
           const [compItem] = ordered.splice(compIdx, 1);
           ordered.splice(priceIdx, 0, compItem);
           return ordered;
         }
+        return enriched;
       }
       return rawSections;
     })(),
+    whoWeServe: rawSections?.find((s: any) => s._type === 'whoWeServeSection') || null,
+    comparison: rawSections?.find((s: any) => s._type === 'comparisonSection') || null,
+    closingCta: rawSections?.find((s: any) => s._type === 'closingCtaSection') || null,
     faqs,
     pricingTiers,
     clientStories,
-    metrics: METRICS,
-    videoTestimonials: VIDEO_TESTIMONIALS,
-    comparisonData: COMPARISON_DATA,
+    metrics: rawSections?.find((s: any) => s._type === 'metricsSection')?.metrics || METRICS,
+    videoTestimonials: rawSections?.find((s: any) => s._type === 'videoCarouselSection') || { videos: VIDEO_TESTIMONIALS },
+    comparisonData: rawSections?.find((s: any) => s._type === 'comparisonSection')?.rows || COMPARISON_DATA,
     seo: {
-      title: sanityHome?.seoTitle || defaultHome.seoTitle,
-      description: sanityHome?.seoDescription || defaultHome.seoDescription,
+      title: primaryHome?.seoTitle || seededHome?.seoTitle || defaultHome.seoTitle,
+      description: primaryHome?.seoDescription || seededHome?.seoDescription || defaultHome.seoDescription,
     },
   };
 }
@@ -224,12 +292,22 @@ export async function getCaseStudiesPageData() {
   const page = await safeFetch(caseStudiesPageQuery, null);
   const allStudies = await safeFetch(allCaseStudiesQuery, []);
 
-  const studies =
-    page?.featuredStudies?.length > 0
-      ? page.featuredStudies
-      : allStudies?.length > 0
-      ? allStudies
-      : defaultStudies;
+  let rawStudies: any[] = [];
+  if (page?.featuredStudies?.length > 0) {
+    const featuredIds = new Set(page.featuredStudies.map((s: any) => s._id));
+    const remaining = (allStudies || []).filter((s: any) => !featuredIds.has(s._id));
+    rawStudies = [...page.featuredStudies, ...remaining];
+  } else if (allStudies?.length > 0) {
+    rawStudies = allStudies;
+  } else {
+    rawStudies = defaultStudies;
+  }
+
+  const studies = rawStudies.map((s: any) => ({
+    ...s,
+    id: s.id || s.slug?.current || s._id,
+    clientPhotoUrl: s.clientPhotoUrl || (s.clientPhoto ? (urlForImage(s.clientPhoto) ?? undefined) : undefined),
+  }));
 
   return {
     eyebrow: page?.eyebrow || 'Client Proof & Case Studies',
@@ -258,6 +336,7 @@ export async function getFreeToolsPageData() {
       description:
         'Diagnose whether your bottleneck is voice drift, internal approval drag, or market indifference in under 2 minutes.',
       deliverable: 'Personalized Diagnostic Breakdown & Strategy Prescription',
+      photoTagText: 'Format: 2-Minute Diagnostic Assessment',
       ctaText: 'Launch assessment',
       type: 'audit',
     },
@@ -268,6 +347,7 @@ export async function getFreeToolsPageData() {
       description:
         'The exact conversational interview prompts we use to extract 6 weeks of category-defining essays from a single 45-minute founder conversation.',
       deliverable: 'PDF Guide + Notion Interview Template',
+      photoTagText: 'Format: PDF Guide + Notion Interview Template',
       ctaText: 'Download framework (Instant access)',
       type: 'download',
     },
@@ -278,6 +358,7 @@ export async function getFreeToolsPageData() {
       description:
         'Score your current content against 5 core indicators of authority: lived proof, counter-intuitive insight, tone fidelity, clear positioning, and pipeline velocity.',
       deliverable: 'Google Sheets / Excel Self-Scorecard',
+      photoTagText: 'Format: Google Sheets / Excel Self-Scorecard',
       ctaText: 'Get scorecard template',
       type: 'download',
     },
@@ -288,6 +369,7 @@ export async function getFreeToolsPageData() {
       description:
         'A side-by-side swipe file of 12 real founder hooks reframed from dry corporate jargon into magnetic enterprise narratives.',
       deliverable: '18-Page Field Guide',
+      photoTagText: 'Format: 18-Page Field Guide & Swipe File',
       ctaText: 'Download swipe guide',
       type: 'download',
     },
@@ -296,12 +378,35 @@ export async function getFreeToolsPageData() {
   const page = await safeFetch(freeToolsPageQuery, null);
   const allTools = await safeFetch(allResourcesQuery, []);
 
-  const tools =
-    page?.featuredTools?.length > 0
-      ? page.featuredTools
-      : allTools?.length > 0
-      ? allTools
-      : defaultTools;
+  let rawTools: any[] = [];
+  if (page?.featuredTools?.length > 0) {
+    const featuredIds = new Set(page.featuredTools.map((t: any) => t._id));
+    const remaining = (allTools || []).filter((t: any) => !featuredIds.has(t._id));
+    rawTools = [...page.featuredTools, ...remaining];
+  } else if (allTools?.length > 0) {
+    rawTools = allTools;
+  } else {
+    rawTools = defaultTools;
+  }
+
+  const tools = rawTools.map((t: any) => ({
+    ...t,
+    id: t.id || t.slug?.current || t._id,
+    _id: t._id,
+    title: t.title,
+    category: t.category,
+    description: t.description,
+    deliverable: t.deliverable,
+    photoTagText: t.photoTagText || (t.deliverable ? `Format: ${t.deliverable}` : 'Format: Instant Download & Templates'),
+    ctaText: t.ctaText || 'Download framework',
+    type: t.type || 'download',
+    featureList: t.featureList && t.featureList.length > 0 ? t.featureList : undefined,
+    reviews: t.reviews && t.reviews.length > 0 ? t.reviews : undefined,
+    image: t.imageUrl || (t.coverImage ? (urlForImage(t.coverImage) ?? undefined) : undefined) || t.image,
+    downloadFileUrl: t.downloadFileUrl || t.downloadFile?.asset?.url,
+    externalUrl: t.externalUrl,
+    order: t.order ?? 0,
+  }));
 
   return {
     eyebrow: page?.eyebrow || 'Free Tools & Diagnostics',
@@ -377,14 +482,17 @@ export async function getBlogPageData() {
   const articles =
     posts?.length > 0
       ? posts.map((p: any, idx: number) => ({
-          id: p._id || String(idx + 1),
+          id: p.slug || p._id || String(idx + 1),
+          slug: p.slug || p._id,
           title: p.title,
           excerpt: p.excerpt,
+          content: p.content,
           category: p.category || 'Positioning',
           readTime: p.readTime || '5 min read',
           date: p.dateString || (p.publishedAt ? new Date(p.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Recent'),
           featured: p.featured || (idx === 0),
           coverImage: p.coverImage || null,
+          image: p.imageUrl || (p.coverImage ? (urlForImage(p.coverImage) ?? undefined) : undefined),
         }))
       : defaultArticles;
 

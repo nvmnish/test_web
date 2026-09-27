@@ -59,6 +59,12 @@ export const clientStoriesSection = defineType({
               description: 'Image displayed on the right for Quote 1, or on the left for Quote 2.',
             }),
             defineField({
+              name: 'photoTag',
+              title: 'Photo Tag / Category Badge',
+              type: 'string',
+              description: 'e.g. Commercial Architecture & Building or Campus Enrollment & Growth',
+            }),
+            defineField({
               name: 'imagePlacement',
               title: 'Image Placement',
               type: 'string',

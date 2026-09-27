@@ -8,7 +8,10 @@
     "build": "astro build",
     "preview": "astro preview --port 3000 --host 0.0.0.0",
     "clean": "rm -rf dist",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "sanity:seed": "tsx scripts/generate-sanity-seed.ts",
+    "sanity:migrate": "tsx scripts/migrate-to-sanity.ts",
+    "sanity:sync": "tsx scripts/generate-sanity-seed.ts && tsx scripts/migrate-to-sanity.ts"
   },
   "dependencies": {
     "@astrojs/react": "^6.0.6",

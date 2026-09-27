@@ -16,16 +16,18 @@ export interface FreeToolItem {
   id: string;
   _id?: string;
   title: string;
-
   category: string;
   description: string;
   deliverable: string;
   ctaText: string;
   type?: 'audit' | 'download';
   image?: string;
+  coverImage?: any;
   photoTagText?: string;
   featureList?: string[];
   reviews?: ReviewItem[];
+  downloadFileUrl?: string;
+  externalUrl?: string;
 }
 
 interface FreeToolDetailPageProps {
@@ -243,6 +245,33 @@ export const FreeToolDetailPage: React.FC<FreeToolDetailPageProps> = ({
                         <Sparkles className="w-4 h-4 text-[#BDC67A]" />
                         <span>Launch Interactive Diagnostic Now</span>
                       </button>
+                    </div>
+                  )}
+                  {tool.downloadFileUrl && (
+                    <div className="pt-2">
+                      <a
+                        href={tool.downloadFileUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        download
+                        className="bg-[#0D4049] hover:bg-[#08292E] text-white px-6 py-3 rounded-full text-sm font-semibold inline-flex items-center gap-2 transition-all shadow-xs"
+                      >
+                        <Download className="w-4 h-4 text-[#BDC67A]" />
+                        <span>Download Asset Directly</span>
+                      </a>
+                    </div>
+                  )}
+                  {tool.externalUrl && (
+                    <div className="pt-2">
+                      <a
+                        href={tool.externalUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="bg-[#0D4049] hover:bg-[#08292E] text-white px-6 py-3 rounded-full text-sm font-semibold inline-flex items-center gap-2 transition-all shadow-xs"
+                      >
+                        <Sparkles className="w-4 h-4 text-[#BDC67A]" />
+                        <span>Open Resource Link</span>
+                      </a>
                     </div>
                   )}
                 </div>

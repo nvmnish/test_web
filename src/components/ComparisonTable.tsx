@@ -1,18 +1,28 @@
 import React from 'react';
 import { COMPARISON_DATA } from '../data/content';
 
-export const ComparisonTable: React.FC = () => {
+interface ComparisonTableProps {
+  data?: any;
+}
+
+export const ComparisonTable: React.FC<ComparisonTableProps> = ({ data }) => {
+  const heading = data?.heading || data?.title || "Who we aren't";
+  const subheading = data?.subheading || data?.description || "Most content agencies look the same. Here's what makes working with GLS different.";
+  const activeRows = (data?.rows && data.rows.length > 0) ? data.rows : (data?.items && data.items.length > 0) ? data.items : COMPARISON_DATA;
+
   return (
     <section className="py-14 sm:py-20 bg-[#FFF9F3]" id="who-we-arent">
       <div className="max-w-6xl mx-auto px-6 sm:px-10 lg:px-12">
         {/* Section Heading matching image.png */}
         <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
           <h2 className="text-5xl sm:text-6xl lg:text-[4.25rem] font-serif italic text-[#281B0C] tracking-tight">
-            Who we aren&apos;t
+            {heading}
           </h2>
-          <p className="mt-5 text-base sm:text-lg text-stone-600 font-sans max-w-xl mx-auto leading-relaxed">
-            Most content agencies look the same. Here&apos;s what makes working with GLS different.
-          </p>
+          {subheading && (
+            <p className="mt-5 text-base sm:text-lg text-stone-600 font-sans max-w-xl mx-auto leading-relaxed">
+              {subheading}
+            </p>
+          )}
         </div>
 
         {/* Comparison Table Box from image.png */}
@@ -32,7 +42,7 @@ export const ComparisonTable: React.FC = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-stone-200/70 font-sans">
-                {COMPARISON_DATA.map((row, idx) => (
+                {activeRows.map((row: any, idx: number) => (
                   <tr key={idx} className="hover:bg-stone-50/60 transition-colors">
                     {/* Dimension Name Column */}
                     <td className="py-7 px-8 text-xs font-semibold tracking-widest text-stone-600 uppercase">

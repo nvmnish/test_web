@@ -25,6 +25,7 @@ export interface HeroData {
   secondaryCta?: string;
   heroImage?: any;
   heroBackgroundImage?: any;
+  metrics?: any[];
 }
 
 interface HeroProps {
@@ -164,7 +165,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenHeavyModal, onN
       <section className="bg-[#FFF9F3] text-[#0D4049] py-12 sm:py-16 relative z-20 border-b border-[#281B0C]/5" id="metrics">
         <div className="max-w-6xl xl:max-w-7xl mx-auto px-6 sm:px-10 lg:px-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 sm:gap-14 lg:gap-16 xl:gap-24 text-left">
-            {METRICS.map((metric, idx) => {
+            {(data?.metrics && data.metrics.length > 0 ? data.metrics : METRICS).map((metric: any, idx: number) => {
               const fillPercent = metric.barPercentage ?? (typeof metric.number === 'number' ? metric.number : 88);
               return (
                 <div key={idx} className="flex flex-col items-start text-left">

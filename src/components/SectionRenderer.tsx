@@ -55,6 +55,7 @@ export const SectionRenderer: React.FC<SectionRendererProps> = ({
             return (
               <WhoWeServe
                 key={key}
+                data={section}
                 onRedirectToCaseStudies={onRedirectToCaseStudies}
               />
             );
@@ -63,6 +64,7 @@ export const SectionRenderer: React.FC<SectionRendererProps> = ({
             return (
               <ClientStories
                 key={key}
+                data={section}
                 onOpenBooking={onOpenBooking}
                 onRedirectToCaseStudies={onRedirectToCaseStudies}
                 onNavigate={onNavigate}
@@ -70,23 +72,26 @@ export const SectionRenderer: React.FC<SectionRendererProps> = ({
             );
 
           case 'videoCarouselSection':
-            return <VideoCarousel key={key} />;
+            return <VideoCarousel key={key} data={section} />;
 
           case 'pricingSection':
             return (
               <Pricing
                 key={key}
+                title={section.heading || section.title}
                 onSelectTier={onSelectTier}
               />
             );
 
           case 'comparisonSection':
-            return <ComparisonTable key={key} />;
+            return <ComparisonTable key={key} data={section} />;
 
           case 'faqSection':
             return (
               <FAQSection
                 key={key}
+                data={section}
+                title={section.heading || section.title}
                 onOpenBooking={onOpenBooking}
               />
             );
@@ -95,6 +100,7 @@ export const SectionRenderer: React.FC<SectionRendererProps> = ({
             return (
               <ClosingCta
                 key={key}
+                data={section}
                 onOpenBooking={onOpenBooking}
                 onOpenHeavyModal={onOpenHeavyModal}
               />

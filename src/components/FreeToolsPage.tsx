@@ -224,9 +224,25 @@ Best,
               <div
                 key={toolKey}
                 onClick={() => handleToolClick(tool)}
-                className="bg-[#FFFDF9] rounded-xl p-8 sm:p-10 flex flex-col justify-between shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer group border border-stone-200/60"
+                className="bg-[#FFFDF9] rounded-xl overflow-hidden p-8 sm:p-10 flex flex-col justify-between shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer group border border-stone-200/60"
               >
                 <div>
+                  {tool.image && (
+                    <div className="mb-6 -mx-8 -mt-8 sm:-mx-10 sm:-mt-10 aspect-[16/9] bg-[#0D4049]/10 relative overflow-hidden">
+                      <img
+                        src={tool.image}
+                        alt={tool.title}
+                        className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-500"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
+                      {tool.photoTagText && (
+                        <span className="absolute bottom-2.5 left-3 text-[0.65rem] font-bold uppercase tracking-wider bg-[#BDC67A] text-[#0D4049] px-2 py-0.5 shadow-xs">
+                          {tool.photoTagText}
+                        </span>
+                      )}
+                    </div>
+                  )}
+
                   <div className="flex items-center justify-between mb-4">
                     <span className={`text-xs font-semibold uppercase tracking-wider px-3 py-1 rounded-sm ${getBadgeClass(tool.category)}`}>
                       {tool.category}

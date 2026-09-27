@@ -1,36 +1,89 @@
 // Site Settings & SEO
-export const siteSettingsQuery = `*[_type == "siteSettings"][0]{
+export const siteSettingsQuery = `*[_type == "siteSettings" && _id in ["siteSettings", "globalSiteSettings"]] | order(_updatedAt desc)[0]{
   siteTitle,
   siteDescription,
   contactEmail,
   bookingUrl,
   linkedinUrl,
   footerNote,
-  ogImage
+  ogImage{
+    ...,
+    asset->
+  },
+  "ogImageUrl": ogImage.asset->url
 }`;
 
 // Homepage Query
-export const homePageQuery = `*[_type == "homePage"][0]{
+export const homePageQuery = `*[_type == "homePage" && _id in ["homePage", "page-home"]] | order(_updatedAt desc){
+  _id,
   title,
   heroHeadline,
   heroSubheadline,
-  heroImage,
-  heroBackgroundImage,
+  heroImage{
+    ...,
+    asset->
+  },
+  "heroImageUrl": heroImage.asset->url,
+  heroBackgroundImage{
+    ...,
+    asset->
+  },
+  "heroBackgroundImageUrl": heroBackgroundImage.asset->url,
   heroPrimaryCta,
   heroSecondaryCta,
-  sections,
+  quote1ClientName,
+  quote1Quote,
+  quote1Timeframe,
+  quote1Paragraph,
+  quote1Photo{
+    ...,
+    asset->
+  },
+  "quote1PhotoUrl": quote1Photo.asset->url,
+  quote1Tag,
+  quote1CtaText,
+  quote2ClientName,
+  quote2Quote,
+  quote2Timeframe,
+  quote2Paragraph,
+  quote2Photo{
+    ...,
+    asset->
+  },
+  "quote2PhotoUrl": quote2Photo.asset->url,
+  quote2Tag,
+  quote2CtaText,
+  popupEnabled,
+  popupBadge,
+  popupHeadline,
+  popupButtonText,
+  sections[]{
+    ...,
+    stories[]{
+      ...,
+      photo{
+        ...,
+        asset->
+      },
+      "photoUrl": photo.asset->url
+    }
+  },
   seoTitle,
   seoDescription
 }`;
 
 // About Page Query
-export const aboutPageQuery = `*[_type == "aboutPage"][0]{
+export const aboutPageQuery = `*[_type == "aboutPage" && _id in ["aboutPage", "page-about"]] | order(_updatedAt desc)[0]{
   title,
   eyebrow,
   headlineQuote,
   bioLead,
   bioParagraphs,
-  bioImage,
+  bioImage{
+    ...,
+    asset->
+  },
+  "bioImageUrl": bioImage.asset->url,
   principlesTitle,
   principles,
   sections,
@@ -39,13 +92,14 @@ export const aboutPageQuery = `*[_type == "aboutPage"][0]{
 }`;
 
 // Proof & Case Studies Page Query
-export const caseStudiesPageQuery = `*[_type == "caseStudiesPage"][0]{
+export const caseStudiesPageQuery = `*[_type == "caseStudiesPage" && _id in ["caseStudiesPage", "page-case-studies"]] | order(_updatedAt desc)[0]{
   title,
   eyebrow,
   headline,
   description,
   featuredStudies[]->{
     _id,
+    "id": coalesce(slug.current, _id),
     client,
     role,
     industry,
@@ -59,7 +113,13 @@ export const caseStudiesPageQuery = `*[_type == "caseStudiesPage"][0]{
     outcome,
     storyParagraphs,
     quotes,
-    clientPhoto
+    clientPhoto{
+      ...,
+      asset->
+    },
+    "clientPhotoUrl": clientPhoto.asset->url,
+    videoUrl,
+    order
   },
   sections,
   seoTitle,
@@ -69,6 +129,7 @@ export const caseStudiesPageQuery = `*[_type == "caseStudiesPage"][0]{
 // Standalone Case Studies Collection
 export const allCaseStudiesQuery = `*[_type == "caseStudy"] | order(order asc, _createdAt desc){
   _id,
+  "id": coalesce(slug.current, _id),
   client,
   role,
   industry,
@@ -82,26 +143,45 @@ export const allCaseStudiesQuery = `*[_type == "caseStudy"] | order(order asc, _
   outcome,
   storyParagraphs,
   quotes,
-  clientPhoto,
+  clientPhoto{
+    ...,
+    asset->
+  },
+  "clientPhotoUrl": clientPhoto.asset->url,
+  videoUrl,
   order
 }`;
 
 // Free Tools & Resources Page Query
-export const freeToolsPageQuery = `*[_type == "freeToolsPage"][0]{
+export const freeToolsPageQuery = `*[_type == "freeToolsPage" && _id in ["freeToolsPage", "page-free-tools"]] | order(_updatedAt desc)[0]{
   title,
   eyebrow,
   headline,
   description,
   featuredTools[]->{
     _id,
+    "id": coalesce(slug.current, _id),
     title,
     category,
     description,
     deliverable,
+    photoTagText,
     ctaText,
     type,
+    featureList,
+    reviews,
+    coverImage{
+      ...,
+      asset->
+    },
+    "imageUrl": coverImage.asset->url,
+    downloadFile{
+      ...,
+      asset->
+    },
+    "downloadFileUrl": downloadFile.asset->url,
     externalUrl,
-    "downloadFileUrl": downloadFile.asset->url
+    order
   },
   sections,
   seoTitle,
@@ -111,22 +191,37 @@ export const freeToolsPageQuery = `*[_type == "freeToolsPage"][0]{
 // Standalone Free Tools Collection
 export const allResourcesQuery = `*[_type == "resourceItem"] | order(order asc, _createdAt desc){
   _id,
+  "id": coalesce(slug.current, _id),
   title,
   category,
   description,
   deliverable,
+  photoTagText,
   ctaText,
   type,
-  externalUrl,
+  featureList,
+  reviews,
+  coverImage{
+    ...,
+    asset->
+  },
+  "imageUrl": coverImage.asset->url,
+  downloadFile{
+    ...,
+    asset->
+  },
   "downloadFileUrl": downloadFile.asset->url,
+  externalUrl,
   order
 }`;
 
 // Newsletter Page Query
-export const newsletterPageQuery = `*[_type == "newsletterPage"][0]{
+export const newsletterPageQuery = `*[_type == "newsletterPage" && _id in ["newsletterPage", "page-newsletter"]] | order(_updatedAt desc)[0]{
   title,
   eyebrow,
+  titleField,
   headline,
+  subtitle,
   description,
   buttonText,
   disclaimer,
@@ -138,10 +233,11 @@ export const newsletterPageQuery = `*[_type == "newsletterPage"][0]{
 }`;
 
 // Contact Page Query
-export const contactPageQuery = `*[_type == "contactPage"][0]{
+export const contactPageQuery = `*[_type == "contactPage" && _id in ["contactPage", "page-contact"]] | order(_updatedAt desc)[0]{
   title,
   eyebrow,
   headline,
+  subheadline,
   description,
   email,
   location,
@@ -153,13 +249,14 @@ export const contactPageQuery = `*[_type == "contactPage"][0]{
 }`;
 
 // Blog Page Query
-export const blogPageQuery = `*[_type == "blogPage"][0]{
+export const blogPageQuery = `*[_type == "blogPage" && _id in ["blogPage", "page-blog"]] | order(_updatedAt desc)[0]{
   title,
   eyebrow,
   headline,
   description,
   featuredPost->{
     _id,
+    "id": coalesce(slug.current, _id),
     title,
     "slug": slug.current,
     excerpt,
@@ -168,7 +265,11 @@ export const blogPageQuery = `*[_type == "blogPage"][0]{
     publishedAt,
     dateString,
     featured,
-    coverImage
+    coverImage{
+      ...,
+      asset->
+    },
+    "imageUrl": coverImage.asset->url
   },
   sections,
   seoTitle,
@@ -178,15 +279,22 @@ export const blogPageQuery = `*[_type == "blogPage"][0]{
 // Standalone Blog Posts Collection
 export const allBlogPostsQuery = `*[_type == "blogPost"] | order(publishedAt desc, _createdAt desc){
   _id,
+  "id": coalesce(slug.current, _id),
   title,
   "slug": slug.current,
   excerpt,
+  content,
   category,
   readTime,
   publishedAt,
   dateString,
   featured,
-  coverImage
+  coverImage{
+    ...,
+    asset->
+  },
+  "imageUrl": coverImage.asset->url,
+  author
 }`;
 
 // Standalone Collections for Homepage fallback / inclusion
@@ -223,5 +331,10 @@ export const allClientStoriesQuery = `*[_type == "clientStory"] | order(order as
   storyBody,
   ctaText,
   ctaUrl,
+  photo{
+    ...,
+    asset->
+  },
+  "photoUrl": photo.asset->url,
   order
 }`;

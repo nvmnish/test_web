@@ -19,6 +19,13 @@ export const deskStructure: StructureResolver = (S) =>
                     .documentId('homePage')
                 ),
               S.listItem()
+                .title('🏠 Homepage (Pre-seeded Sections & Layout)')
+                .child(
+                  S.document()
+                    .schemaType('homePage')
+                    .documentId('page-home')
+                ),
+              S.listItem()
                 .title('👤 About Sheri & GLS')
                 .child(
                   S.document()

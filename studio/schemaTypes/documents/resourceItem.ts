@@ -12,6 +12,24 @@ export const resourceItem = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'slug',
+      title: 'Slug',
+      type: 'slug',
+      options: {
+        source: 'title',
+        maxLength: 96,
+      },
+    }),
+    defineField({
+      name: 'coverImage',
+      title: 'Cover Image / Graphic Asset',
+      type: 'image',
+      options: {
+        hotspot: true,
+      },
+      description: 'Preview image for the resource card and detail page.',
+    }),
+    defineField({
       name: 'category',
       title: 'Category',
       type: 'string',
