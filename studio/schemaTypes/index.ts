@@ -7,7 +7,8 @@ import { newsletterPage } from './pages/newsletterPage';
 import { contactPage } from './pages/contactPage';
 import { blogPage } from './pages/blogPage';
 
-// Standalone Content Collections
+// Standalone Content Collections & Documents
+import { page } from './documents/page';
 import { blogPost } from './documents/blogPost';
 import { caseStudy } from './documents/caseStudy';
 import { resourceItem } from './documents/resourceItem';
@@ -15,8 +16,9 @@ import { clientStory } from './documents/clientStory';
 import { faqItem } from './documents/faqItem';
 import { pricingTier } from './documents/pricingTier';
 import { siteSettings } from './documents/siteSettings';
+import { footer } from './documents/footer';
 
-// Modular Reusable Section Blocks (Elementor / Page Builder blocks)
+// Modular Reusable Section Blocks (14 Supported Blocks)
 import { heroSection } from './sections/heroSection';
 import { whoWeServeSection } from './sections/whoWeServeSection';
 import { metricsSection } from './sections/metricsSection';
@@ -30,14 +32,17 @@ import { proofCtaSection } from './sections/proofCtaSection';
 import { richTextSection } from './sections/richTextSection';
 import { mediaCalloutSection } from './sections/mediaCalloutSection';
 import { popupToolSection } from './sections/popupToolSection';
-import { footer } from './documents/footer';
+import { blogListingSection } from './sections/blogListingSection';
+import { caseStudyGridSection } from './sections/caseStudyGridSection';
+import { resourceListingSection } from './sections/resourceListingSection';
+import { aboutBioSection } from './sections/aboutBioSection';
 
 export const schemaTypes = [
-  // Site & Global
+  // Site & Global Singletons
   siteSettings,
   footer,
 
-  // Pages
+  // Core Pages
   homePage,
   aboutPage,
   caseStudiesPage,
@@ -45,6 +50,9 @@ export const schemaTypes = [
   newsletterPage,
   contactPage,
   blogPage,
+
+  // Custom Landing Pages
+  page,
 
   // Collections
   blogPost,
@@ -54,7 +62,7 @@ export const schemaTypes = [
   faqItem,
   pricingTier,
 
-  // Reusable Page Builder Blocks
+  // Complete Library of 14 Predefined Section Blocks
   heroSection,
   whoWeServeSection,
   metricsSection,
@@ -68,5 +76,8 @@ export const schemaTypes = [
   richTextSection,
   mediaCalloutSection,
   popupToolSection,
+  blogListingSection,
+  caseStudyGridSection,
+  resourceListingSection,
+  aboutBioSection,
 ];
-

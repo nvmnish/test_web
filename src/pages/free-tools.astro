@@ -2,15 +2,30 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { FreeToolsPage } from '../components/FreeToolsPage';
 import { Footer } from '../components/Footer';
-import { getFreeToolsPageData } from '../lib/sanity/api';
+import { getFreeToolsPageData, getFooterData } from '../lib/sanity/api';
 
-const freeToolsData = await getFreeToolsPageData();
+const isPreview = Astro.cookies.has('sanity_preview') || Astro.url.searchParams.get('preview') === 'true';
+
+if (isPreview) {
+  Astro.response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+} else {
+  Astro.response.headers.set('Cache-Control', 'public, max-age=0, must-revalidate');
+}
+
+const freeToolsData = await getFreeToolsPageData({ isPreview });
+const footerData = await getFooterData({ isPreview });
 ---
 
 <BaseLayout
   title={freeToolsData.seo?.title || "Free Executive Marketing Tools & Diagnostic Kits — GLS."}
   description={freeToolsData.seo?.description || "Run internal diagnostics, grab our 45-minute oral extraction cheatsheet, and score your market differentiation with our free resources."}
 >
+  {isPreview && (
+    <div class="fixed top-0 left-0 right-0 z-50 bg-[#0D4049] text-white py-1.5 px-4 text-xs font-semibold flex items-center justify-between shadow-md">
+      <span>Draft Preview Mode Active</span>
+      <a href="/api/exit-preview" class="underline hover:text-[#BDC67A]">Exit Preview</a>
+    </div>
+  )}
   <FreeToolsPage client:load data={freeToolsData} />
-  <Footer client:load />
+  <Footer client:load data={footerData} />
 </BaseLayout>

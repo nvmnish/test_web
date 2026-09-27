@@ -19,13 +19,6 @@ export const deskStructure: StructureResolver = (S) =>
                     .documentId('homePage')
                 ),
               S.listItem()
-                .title('🏠 Homepage (Pre-seeded Sections & Layout)')
-                .child(
-                  S.document()
-                    .schemaType('homePage')
-                    .documentId('page-home')
-                ),
-              S.listItem()
                 .title('👤 About Sheri & GLS')
                 .child(
                   S.document()
@@ -67,6 +60,8 @@ export const deskStructure: StructureResolver = (S) =>
                     .schemaType('blogPage')
                     .documentId('blogPage')
                 ),
+              S.divider(),
+              S.documentTypeListItem('page').title('📑 Custom Landing Pages (New Pages)'),
             ])
         ),
 
@@ -79,12 +74,12 @@ export const deskStructure: StructureResolver = (S) =>
           S.list()
             .title('All Content Collections')
             .items([
-              S.documentTypeListItem('blogPost').title('Blog Posts & Essays'),
-              S.documentTypeListItem('caseStudy').title('Case Studies & Proof Entries'),
-              S.documentTypeListItem('resourceItem').title('Free Tools & Downloads'),
-              S.documentTypeListItem('clientStory').title('Client Stories (Featured Cards)'),
-              S.documentTypeListItem('faqItem').title('FAQs (Frequently Asked Questions)'),
-              S.documentTypeListItem('pricingTier').title('Pricing Tiers'),
+              S.documentTypeListItem('resourceItem').title('🛠️ Free Tools & Downloads'),
+              S.documentTypeListItem('blogPost').title('✍️ Blog Posts & Essays'),
+              S.documentTypeListItem('caseStudy').title('📈 Case Studies & Proof Entries'),
+              S.documentTypeListItem('clientStory').title('💬 Client Stories (Featured Cards)'),
+              S.documentTypeListItem('faqItem').title('❓ FAQs (Frequently Asked Questions)'),
+              S.documentTypeListItem('pricingTier').title('🏷️ Pricing Tiers'),
             ])
         ),
 
@@ -107,4 +102,3 @@ export const deskStructure: StructureResolver = (S) =>
             .documentId('footer')
         ),
     ]);
-

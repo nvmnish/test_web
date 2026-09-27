@@ -1,4 +1,4 @@
-import { sanityClient } from './client';
+import { getSanityClient, sanityClient } from './client';
 import { urlForImage } from './image';
 import {
   homePageQuery,
@@ -15,6 +15,9 @@ import {
   allPricingTiersQuery,
   allClientStoriesQuery,
   siteSettingsQuery,
+  footerQuery,
+  customPageBySlugQuery,
+  allCustomPagesQuery,
 } from './queries';
 import {
   METRICS,
@@ -24,16 +27,24 @@ import {
   FAQ_ITEMS,
 } from '../../data/content';
 
-// Safe fetch wrapper with timeout/fallback
-async function safeFetch<T = any>(query: string, fallback: any = null): Promise<any> {
+// Safe fetch wrapper with timeout/fallback and preview perspective support
+async function safeFetch<T = any>(
+  query: string,
+  paramsOrFallback: any = null,
+  options?: { isPreview?: boolean; fallback?: any; params?: Record<string, any> }
+): Promise<any> {
+  const isParams = options?.params || (paramsOrFallback && typeof paramsOrFallback === 'object' && !Array.isArray(paramsOrFallback) && ('slug' in paramsOrFallback));
+  const params = isParams ? (options?.params || paramsOrFallback) : {};
+  const fallback = !isParams ? paramsOrFallback : (options?.fallback ?? null);
+  const client = getSanityClient({ isPreview: options?.isPreview });
+
   try {
-    const data = await sanityClient.fetch(query);
+    const data = await client.fetch(query, params);
     if (data && (Array.isArray(data) ? data.length > 0 : Object.keys(data).length > 0)) {
       return data;
     }
     return fallback;
-  } catch {
-    // Graceful fallback if dataset is empty or offline
+  } catch (err) {
     return fallback;
   }
 }
@@ -637,3 +648,65 @@ export async function getSiteSettings() {
     ogImage: data?.ogImage || null,
   };
 }
+
+// 9. Global Footer Data
+export async function getFooterData(options?: { isPreview?: boolean }) {
+  const defaultFooter = {
+    brandName: 'GLS',
+    tagline: 'Marketing and messaging advisory for leaders too busy doing the work to talk about it.',
+    copyright: `© ${new Date().getFullYear()} GLS Advisory LLC. All rights reserved.`,
+    linkedinUrl: 'https://www.linkedin.com',
+    instagramUrl: 'https://www.instagram.com',
+    emailAddress: 'sheri@glsadvisory.com',
+    backgroundColor: '#FFF9F3',
+    linkGroups: [
+      {
+        groupTitle: 'Pages',
+        links: [
+          { label: 'Case Studies', url: '/case-studies', isCta: false, isExternal: false },
+          { label: 'Pricing', url: '/#pricing', isCta: false, isExternal: false },
+          { label: 'About me', url: '/about', isCta: false, isExternal: false },
+          { label: 'Blog', url: '/blog', isCta: false, isExternal: false },
+          { label: 'Free tools', url: '/free-tools', isCta: false, isExternal: false },
+          { label: 'Newsletter', url: '/newsletter', isCta: false, isExternal: false },
+          { label: 'Work with me', url: '/contact', isCta: true, isExternal: false },
+        ],
+      },
+    ],
+    navigationLinks: [
+      { label: 'Case Studies', url: '/case-studies', isCta: false },
+      { label: 'Pricing', url: '/#pricing', isCta: false },
+      { label: 'About me', url: '/about', isCta: false },
+      { label: 'Blog', url: '/blog', isCta: false },
+      { label: 'Free tools', url: '/free-tools', isCta: false },
+      { label: 'Newsletter', url: '/newsletter', isCta: false },
+      { label: 'Work with me', url: '/contact', isCta: true },
+    ],
+    legalLinks: [
+      { label: 'Privacy Policy', url: '#' },
+      { label: 'Terms of Service', url: '#' },
+    ],
+  };
+
+  const data = await safeFetch(footerQuery, defaultFooter, { isPreview: options?.isPreview, fallback: defaultFooter });
+  return data || defaultFooter;
+}
+
+// 10. Custom Landing Pages
+export async function getCustomPageData(slug: string, options?: { isPreview?: boolean }) {
+  const cleanSlug = slug.replace(/^\/+|\/+$/g, '');
+  return await safeFetch(
+    customPageBySlugQuery,
+    null,
+    {
+      isPreview: options?.isPreview,
+      params: { slug: cleanSlug },
+      fallback: null,
+    }
+  );
+}
+
+export async function getAllCustomPages() {
+  return await safeFetch(allCustomPagesQuery, []);
+}
+

@@ -2,15 +2,30 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { CaseStudiesPage } from '../components/CaseStudiesPage';
 import { Footer } from '../components/Footer';
-import { getCaseStudiesPageData } from '../lib/sanity/api';
+import { getCaseStudiesPageData, getFooterData } from '../lib/sanity/api';
 
-const caseStudiesData = await getCaseStudiesPageData();
+const isPreview = Astro.cookies.has('sanity_preview') || Astro.url.searchParams.get('preview') === 'true';
+
+if (isPreview) {
+  Astro.response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+} else {
+  Astro.response.headers.set('Cache-Control', 'public, max-age=0, must-revalidate');
+}
+
+const caseStudiesData = await getCaseStudiesPageData({ isPreview });
+const footerData = await getFooterData({ isPreview });
 ---
 
 <BaseLayout
   title={caseStudiesData.seo?.title || "Case Studies & Proof — GLS. Executive Marketing Advisory"}
   description={caseStudiesData.seo?.description || "Explore real case studies showing how founders and in-house teams turned executive expertise into pipeline and enrollment."}
 >
+  {isPreview && (
+    <div class="fixed top-0 left-0 right-0 z-50 bg-[#0D4049] text-white py-1.5 px-4 text-xs font-semibold flex items-center justify-between shadow-md">
+      <span>Draft Preview Mode Active</span>
+      <a href="/api/exit-preview" class="underline hover:text-[#BDC67A]">Exit Preview</a>
+    </div>
+  )}
   <CaseStudiesPage client:load data={caseStudiesData} />
-  <Footer client:load />
+  <Footer client:load data={footerData} />
 </BaseLayout>

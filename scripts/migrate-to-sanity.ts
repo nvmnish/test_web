@@ -1,12 +1,15 @@
 /**
- * Idempotent Sanity Content & Image Migration Script
+ * Safe, Idempotent Sanity Content & Image Migration Script with Auto-Backup
  * 
- * Uploads all 9 content images from src/assets/images/ to Sanity,
- * maps their asset IDs to document fields, and upserts all 46 website documents
- * so Sanity Studio contains the complete, editable website content.
+ * Features:
+ * 1. Automatic Backup: Backs up existing remote Sanity documents to data/sanity-backup-<timestamp>.json before modifying anything.
+ * 2. Idempotent Image Uploads: Checks existing image assets before uploading to avoid duplicates.
+ * 3. Safe Upsert: Preserves any documents already created/edited in Studio unless --force is passed.
+ * 4. Document & Asset Manifest Reconciliation: Verifies all 9 content images and 46 core documents.
  * 
  * Usage:
- *   SANITY_AUTH_TOKEN="your_editor_or_write_token" npx tsx scripts/migrate-to-sanity.ts
+ *   SANITY_AUTH_TOKEN="your_token" npx tsx scripts/migrate-to-sanity.ts
+ *   SANITY_AUTH_TOKEN="your_token" npx tsx scripts/migrate-to-sanity.ts --force
  */
 
 import { createClient } from '@sanity/client';
@@ -27,27 +30,31 @@ const CONTENT_IMAGES: Record<string, string> = {
 };
 
 async function migrate() {
+  const isForce = process.argv.includes('--force');
   const token = process.env.SANITY_AUTH_TOKEN || process.env.SANITY_API_TOKEN;
   const projectId = process.env.PUBLIC_SANITY_PROJECT_ID || 'dzwbnapy';
   const dataset = process.env.PUBLIC_SANITY_DATASET || 'production';
 
   console.log(`\n======================================================`);
-  console.log(`🚀 Starting Sanity Content & Image Migration`);
-  console.log(`   Project: ${projectId} | Dataset: ${dataset}`);
+  console.log(`🚀 Starting Safe Sanity Migration & Asset Reconciliation`);
+  console.log(`   Project ID: ${projectId} | Dataset: ${dataset}`);
+  console.log(`   Mode: ${isForce ? 'FORCE OVERWRITE (--force)' : 'SAFE UPSERT (Preserves existing Studio edits)'}`);
   console.log(`======================================================\n`);
 
   if (!token) {
     console.log(`
 ⚠️  NO SANITY_AUTH_TOKEN FOUND IN ENVIRONMENT
 
-Sanity requires a Write or Editor API Token to upload images and populate documents.
-To run this migration:
-1. Create a Write Token at:
+Sanity requires a Write or Editor API Token to authenticate remote uploads and dataset modifications.
+To run this migration against your remote dataset:
+
+1. Generate a Write Token at:
    https://www.sanity.io/manage/project/${projectId}/api#tokens
-2. Run:
+
+2. Execute:
    SANITY_AUTH_TOKEN="your_write_token" npx tsx scripts/migrate-to-sanity.ts
 
-(Alternatively, if you are logged into the Sanity CLI on your machine:
+(Or using Sanity CLI login session:
    cd studio
    npx sanity dataset import ../data/sanity-seed.ndjson production --replace
 )
@@ -62,6 +69,22 @@ To run this migration:
     token,
     useCdn: false,
   });
+
+  // Step 0: Backup existing dataset
+  console.log('🛡️  Step 0: Creating automated pre-migration dataset backup...');
+  try {
+    const existingRemoteDocs = await client.fetch(`*[]`);
+    const backupDir = path.resolve(process.cwd(), 'data');
+    if (!fs.existsSync(backupDir)) {
+      fs.mkdirSync(backupDir, { recursive: true });
+    }
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const backupFilePath = path.join(backupDir, `sanity-backup-${timestamp}.json`);
+    fs.writeFileSync(backupFilePath, JSON.stringify(existingRemoteDocs, null, 2), 'utf-8');
+    console.log(`   ✅ Backup created: ${backupFilePath} (${existingRemoteDocs.length} documents archived)\n`);
+  } catch (backupErr: any) {
+    console.warn(`   ⚠️ Warning: Backup failed or dataset is empty: ${backupErr?.message || backupErr}`);
+  }
 
   // Step 1: Upload Content Images idempotently
   console.log('📦 Step 1: Uploading content images from src/assets/images/...');
@@ -175,15 +198,25 @@ To run this migration:
     return doc;
   });
 
-  // Step 3: Upsert all documents into Sanity
+  // Step 3: Upsert documents into Sanity (safe repeat-run check)
   console.log(`\n💾 Step 3: Populating ${finalDocs.length} documents into Sanity dataset '${dataset}'...`);
   let successCount = 0;
+  let skippedCount = 0;
   let failCount = 0;
 
   for (const doc of finalDocs) {
     try {
+      if (!isForce) {
+        const existingDoc = await client.getDocument(doc._id);
+        if (existingDoc) {
+          console.log(`   ⏭️  Skipped [${doc._type}] ${doc._id} (already exists, preserving Studio edits)`);
+          skippedCount++;
+          continue;
+        }
+      }
+
       const res = await client.createOrReplace(doc);
-      console.log(`   ✅ [${res._type}] ${res._id} — ${res.title || res.headline || res.client || res.siteTitle || ''}`);
+      console.log(`   ✅ [${res._type}] ${res._id} — ${res.title || res.headline || res.brandName || res.client || res.siteTitle || ''}`);
       successCount++;
     } catch (err: any) {
       console.error(`   ❌ Failed [${doc._type}] ${doc._id}:`, err?.message || err);
@@ -191,7 +224,7 @@ To run this migration:
     }
   }
 
-  // Update ndjson file with complete document graph including uploaded image references
+  // Update local ndjson file with complete document graph including uploaded image references
   const ndjsonPath = path.resolve(process.cwd(), 'data/sanity-seed.ndjson');
   fs.writeFileSync(
     ndjsonPath,
@@ -201,7 +234,8 @@ To run this migration:
 
   console.log(`\n======================================================`);
   console.log(`🎉 Migration Finished!`);
-  console.log(`   Successfully Migrated: ${successCount} documents`);
+  console.log(`   Upserted: ${successCount} documents`);
+  console.log(`   Preserved Existing: ${skippedCount} documents`);
   if (failCount > 0) console.log(`   Failed: ${failCount} documents`);
   console.log(`   Updated seed file: ${ndjsonPath}`);
   console.log(`======================================================\n`);

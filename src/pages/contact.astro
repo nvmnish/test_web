@@ -2,9 +2,18 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { ContactPage } from '../components/ContactPage';
 import { Footer } from '../components/Footer';
-import { getContactPageData } from '../lib/sanity/api';
+import { getContactPageData, getFooterData } from '../lib/sanity/api';
+
+const isPreview = Astro.cookies.has('sanity_preview') || Astro.url.searchParams.get('preview') === 'true';
+
+if (isPreview) {
+  Astro.response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+} else {
+  Astro.response.headers.set('Cache-Control', 'public, max-age=0, must-revalidate');
+}
 
 const contactData = await getContactPageData();
+const footerData = await getFooterData({ isPreview });
 ---
 
 <BaseLayout
@@ -12,6 +21,12 @@ const contactData = await getContactPageData();
   description={contactData.seo?.description || "Start a direct conversation with Sheri Otto on executive thought leadership, narrative matrix strategy, or the Executive Content Engine."}
   bodyClass="bg-[#FFF9F3]/60 text-[#1E2E2A] font-sans antialiased selection:bg-[#B8C87A]/40 selection:text-[#162A26] min-h-screen"
 >
+  {isPreview && (
+    <div class="fixed top-0 left-0 right-0 z-50 bg-[#0D4049] text-white py-1.5 px-4 text-xs font-semibold flex items-center justify-between shadow-md">
+      <span>Draft Preview Mode Active</span>
+      <a href="/api/exit-preview" class="underline hover:text-[#BDC67A]">Exit Preview</a>
+    </div>
+  )}
   <ContactPage client:load data={contactData} />
-  <Footer client:load bgColor="bg-[#FFF9F3]/60" />
+  <Footer client:load bgColor="bg-[#FFF9F3]/60" data={footerData} />
 </BaseLayout>

@@ -2,11 +2,14 @@
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import tailwindcss from '@tailwindcss/vite';
-import sanity from '@sanity/astro';
+import cloudflare from '@astrojs/cloudflare';
 
 // https://astro.build/config
 export default defineConfig({
-  output: 'static',
+  output: 'server',
+  adapter: cloudflare({
+    imageService: 'passthrough',
+  }),
   server: {
     host: '0.0.0.0',
     port: 3000,

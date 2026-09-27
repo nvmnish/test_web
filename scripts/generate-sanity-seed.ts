@@ -21,10 +21,41 @@ export function generateSeedDocs() {
   docs.push({
     _id: 'footer',
     _type: 'footer',
-    companyName: 'Growth Lane Strategies',
-    shortBio: 'Content and messaging advisory by Sheri Otto.',
-    contactEmail: 'sheri@growthlanestrategies.com',
-    linkedinUrl: 'https://linkedin.com/in/sheriotto',
+    brandName: 'GLS',
+    tagline: 'Marketing and messaging advisory for leaders too busy doing the work to talk about it.',
+    linkGroups: [
+      {
+        _key: 'group-pages',
+        groupTitle: 'Pages',
+        links: [
+          { _key: 'link-cases', label: 'Case Studies', url: '/case-studies', isCta: false, isExternal: false },
+          { _key: 'link-pricing', label: 'Pricing', url: '/#pricing', isCta: false, isExternal: false },
+          { _key: 'link-about', label: 'About me', url: '/about', isCta: false, isExternal: false },
+          { _key: 'link-blog', label: 'Blog', url: '/blog', isCta: false, isExternal: false },
+          { _key: 'link-tools', label: 'Free tools', url: '/free-tools', isCta: false, isExternal: false },
+          { _key: 'link-news', label: 'Newsletter', url: '/newsletter', isCta: false, isExternal: false },
+          { _key: 'link-contact', label: 'Work with me', url: '/contact', isCta: true, isExternal: false },
+        ],
+      },
+    ],
+    navigationLinks: [
+      { _key: 'nav-cases', label: 'Case Studies', url: '/case-studies', isCta: false },
+      { _key: 'nav-pricing', label: 'Pricing', url: '/#pricing', isCta: false },
+      { _key: 'nav-about', label: 'About me', url: '/about', isCta: false },
+      { _key: 'nav-blog', label: 'Blog', url: '/blog', isCta: false },
+      { _key: 'nav-tools', label: 'Free tools', url: '/free-tools', isCta: false },
+      { _key: 'nav-news', label: 'Newsletter', url: '/newsletter', isCta: false },
+      { _key: 'nav-work', label: 'Work with me', url: '/contact', isCta: true },
+    ],
+    copyright: '© 2026 GLS Advisory LLC. All rights reserved.',
+    legalLinks: [
+      { _key: 'legal-privacy', label: 'Privacy Policy', url: '#' },
+      { _key: 'legal-terms', label: 'Terms of Service', url: '#' },
+    ],
+    linkedinUrl: 'https://www.linkedin.com',
+    instagramUrl: 'https://www.instagram.com',
+    emailAddress: 'sheri@glsadvisory.com',
+    backgroundColor: '#FFF9F3',
   });
 
   // 3. Homepage (Both canonical 'homePage' and legacy 'page-home')

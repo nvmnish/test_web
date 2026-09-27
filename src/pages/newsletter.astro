@@ -2,9 +2,18 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { NewsletterPage } from '../components/NewsletterPage';
 import { Footer } from '../components/Footer';
-import { getNewsletterPageData } from '../lib/sanity/api';
+import { getNewsletterPageData, getFooterData } from '../lib/sanity/api';
+
+const isPreview = Astro.cookies.has('sanity_preview') || Astro.url.searchParams.get('preview') === 'true';
+
+if (isPreview) {
+  Astro.response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+} else {
+  Astro.response.headers.set('Cache-Control', 'public, max-age=0, must-revalidate');
+}
 
 const newsletterData = await getNewsletterPageData();
+const footerData = await getFooterData({ isPreview });
 ---
 
 <BaseLayout
@@ -12,7 +21,12 @@ const newsletterData = await getNewsletterPageData();
   description={newsletterData.seo?.description || "No generic motivational tips. Just 1 field-tested positioning teardown and 2 framework adjustments every other Tuesday morning."}
   bodyClass="bg-[#FFF9F3]/60 text-[#1E2E2A] font-sans antialiased selection:bg-[#B8C87A]/40 selection:text-[#162A26] min-h-screen"
 >
-  <!-- Interactive Form Island: Receives user input for role, name, email -->
+  {isPreview && (
+    <div class="fixed top-0 left-0 right-0 z-50 bg-[#0D4049] text-white py-1.5 px-4 text-xs font-semibold flex items-center justify-between shadow-md">
+      <span>Draft Preview Mode Active</span>
+      <a href="/api/exit-preview" class="underline hover:text-[#BDC67A]">Exit Preview</a>
+    </div>
+  )}
   <NewsletterPage client:load data={newsletterData} />
-  <Footer client:load bgColor="bg-[#FFF9F3]/60" />
+  <Footer client:load bgColor="bg-[#FFF9F3]/60" data={footerData} />
 </BaseLayout>

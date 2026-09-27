@@ -1,0 +1,62 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { Navbar } from '../components/Navbar';
+import { Footer } from '../components/Footer';
+import { SectionRenderer } from '../components/SectionRenderer';
+import { getCustomPageData, getFooterData } from '../lib/sanity/api';
+
+const { slug } = Astro.params;
+
+if (!slug) {
+  return Astro.redirect('/');
+}
+
+// Check preview mode
+const isPreview = Astro.cookies.has('sanity_preview') || Astro.url.searchParams.get('preview') === 'true';
+
+if (isPreview) {
+  Astro.response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+} else {
+  Astro.response.headers.set('Cache-Control', 'public, max-age=0, must-revalidate');
+}
+
+const pageData = await getCustomPageData(slug, { isPreview });
+
+if (!pageData) {
+  return new Response(null, {
+    status: 404,
+    statusText: 'Page Not Found',
+  });
+}
+
+const footerData = await getFooterData({ isPreview });
+---
+
+<BaseLayout
+  title={pageData.seoTitle || `${pageData.title} — GLS Advisory`}
+  description={pageData.seoDescription || "Marketing, positioning, and messaging advisory for leaders."}
+>
+  {isPreview && (
+    <div class="fixed top-0 left-0 right-0 z-50 bg-[#0D4049] text-white py-1.5 px-4 text-xs font-semibold flex items-center justify-between shadow-md">
+      <span>Draft Preview Mode Active (Unpublished Sanity Changes Visible)</span>
+      <a href="/api/exit-preview" class="underline hover:text-[#BDC67A]">Exit Preview</a>
+    </div>
+  )}
+
+  <header class={isPreview ? "pt-8" : ""}>
+    <Navbar client:load activePage={slug} />
+  </header>
+
+  <main class="min-h-screen">
+    {pageData.sections && pageData.sections.length > 0 ? (
+      <SectionRenderer client:load sections={pageData.sections} />
+    ) : (
+      <div class="py-24 max-w-4xl mx-auto px-6 text-center">
+        <h1 class="text-4xl font-serif italic text-[#0D4049] mb-4">{pageData.title}</h1>
+        <p class="text-stone-500 font-sans">No visible sections configured yet. Add sections in Sanity Studio to customize this page.</p>
+      </div>
+    )}
+  </main>
+
+  <Footer client:load data={footerData} />
+</BaseLayout>

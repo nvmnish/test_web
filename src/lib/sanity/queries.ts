@@ -338,3 +338,123 @@ export const allClientStoriesQuery = `*[_type == "clientStory"] | order(order as
   "photoUrl": photo.asset->url,
   order
 }`;
+
+// Global Footer Query
+export const footerQuery = `*[_type == "footer" && _id in ["footer", "globalFooter"]] | order(_updatedAt desc)[0]{
+  _id,
+  brandName,
+  tagline,
+  linkGroups[]{
+    groupTitle,
+    links[]{
+      label,
+      url,
+      isCta,
+      isExternal
+    }
+  },
+  navigationLinks[]{
+    label,
+    url,
+    isCta
+  },
+  copyright,
+  legalLinks[]{
+    label,
+    url
+  },
+  linkedinUrl,
+  instagramUrl,
+  emailAddress,
+  backgroundColor
+}`;
+
+// Custom Landing Pages
+export const customPageBySlugQuery = `*[_type == "page" && slug.current == $slug][0]{
+  _id,
+  title,
+  "slug": slug.current,
+  seoTitle,
+  seoDescription,
+  ogImage{
+    ...,
+    asset->
+  },
+  "ogImageUrl": ogImage.asset->url,
+  sections[]{
+    ...,
+    heroImage{
+      ...,
+      asset->
+    },
+    "heroImageUrl": heroImage.asset->url,
+    stories[]{
+      ...,
+      photo{
+        ...,
+        asset->
+      },
+      "photoUrl": photo.asset->url
+    },
+    videos[]{
+      ...,
+      videoPoster{
+        ...,
+        asset->
+      },
+      "videoPosterUrl": videoPoster.asset->url
+    },
+    image{
+      ...,
+      asset->
+    },
+    "imageUrl": image.asset->url,
+    bioImage{
+      ...,
+      asset->
+    },
+    "bioImageUrl": bioImage.asset->url,
+    selectedPosts[]->{
+      _id,
+      "id": coalesce(slug.current, _id),
+      title,
+      "slug": slug.current,
+      excerpt,
+      category,
+      readTime,
+      publishedAt,
+      coverImage{ ..., asset-> },
+      "imageUrl": coverImage.asset->url
+    },
+    selectedStudies[]->{
+      _id,
+      "id": coalesce(slug.current, _id),
+      client,
+      metric,
+      outcome,
+      tagline,
+      clientPhoto{ ..., asset-> },
+      "clientPhotoUrl": clientPhoto.asset->url
+    },
+    selectedResources[]->{
+      _id,
+      "id": coalesce(slug.current, _id),
+      title,
+      tag,
+      deliverable,
+      description,
+      downloadUrl,
+      downloadFile{ ..., asset-> },
+      "downloadFileUrl": downloadFile.asset->url,
+      coverImage{ ..., asset-> },
+      "coverImageUrl": coverImage.asset->url
+    }
+  }
+}`;
+
+export const allCustomPagesQuery = `*[_type == "page"]{
+  _id,
+  title,
+  "slug": slug.current
+}`;
+
